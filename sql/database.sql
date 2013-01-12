@@ -376,3 +376,6 @@ alter table `[prefix]products` add column `custom_required` tinyint(1) unsigned 
 alter table `[prefix]promotions` modify `apply_to` enum('products','shipping','subtotal','total') not null default 'total';
 alter table `[prefix]shipping_methods` add column `countries` longtext default '' not null;
 alter table `[prefix]orders` add column `custom_field` text default '' not null;
+
+-- Upgrading to membership based pricing levels
+alter table `[prefix]products` add column `price_membership` varchar(255) not null;
