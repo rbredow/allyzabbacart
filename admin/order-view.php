@@ -383,4 +383,27 @@ if(isset($data['resend']) && $data['resend'] == true) {
       $('#btnDel').attr('disabled','disabled');
     })
   })(jQuery);
+
+</script>
+
+  <?php
+  
+  if($order !== false) {
+    $printView = Cart66Common::getView('views/packing_list.php', array('order' => $order));
+    $printView = str_replace("\n", '', $printView);
+    $printView = str_replace("'", '"', $printView);
+  }
+?>
+
+<script type="text/javascript">
+//<![CDATA[
+jQuery(document).ready(function($) {
+  $('#packing_slip').click(function() {
+    myWindow = window.open('','Your_Receipt','resizable=yes,scrollbars=yes,width=550,height=700');
+    myWindow.document.open("text/html","replace");
+    myWindow.document.write('<?php echo $printView; ?>');
+    return false;
+  });
+});
+//]]>
 </script>
