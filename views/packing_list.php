@@ -31,10 +31,14 @@
        margin: 10px;   
      }
      h1 {
-       font-size: 18px;
+       font-size: 18px; 
+       text-align: center;
+       width: 100%;
      }
      h2 {
-     	font-size: 14px;
+        font-size: 14px;
+        padding: 5px;
+        text-align: center;
      }
      p {
        padding: 3px 0px;
@@ -69,7 +73,7 @@
 </head>
 
 <body>
-  <h1><?php echo get_bloginfo('name'); ?></h1>
+  <h1><img id="AllyZabba-logo" src="/images/AllyZabba@2x.png" width=258 height=131 alt="AllyZabba est. 2095"/></h1>
   <h2>Packing Slip</h2>
   
   <table border="0" cellpadding="0" cellspacing="0">
