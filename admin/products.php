@@ -178,7 +178,7 @@ $data['spreedly'] = $product->getSpreedlyProducts(null, null, '1');
                 <label class="long" for="product-taxable"><?php _e( 'Taxed' , 'cart66' ); ?>:</label>
                 <select id="product-taxable" name='product[taxable]'>
                   <option value='1' <?php echo ($product->taxable == 1)? 'selected="selected"' : '' ?>><?php _e( 'Yes' , 'cart66' ); ?></option>
-                  <option value='0' <?php echo ($product->taxable == 0)? 'selected="selected"' : '' ?>><?php _e( 'No' , 'cart66' ); ?></option>
+                  <option value='0' <?php echo ($product->taxable == 0)? '' : '' ?>><?php _e( 'No' , 'cart66' ); ?></option>
                 </select>
                 <p class="label_desc">
                   <?php _e( 'Do you want to collect sales tax when this item is purchased?' , 'cart66' ); ?><br/>
