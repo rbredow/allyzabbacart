@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Cart66 Professional
+Plugin Name: Cart66 Professional (Rob)
 Plugin URI: http://www.cart66.com
 Description: Wordpress Shopping Cart
-Version: 1.5.1.3
+Version: 1.5.1.3r
 Author: Reality 66
 Author URI: http://www.Reality66.com
 Text Domain: cart66
