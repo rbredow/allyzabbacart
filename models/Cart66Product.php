@@ -872,13 +872,38 @@ class Cart66Product extends Cart66ModelAbstract {
       }
     }
   }
-  
+
+  public function getMembershipPrice() {
+    // Return pricing (if applicable) for different membership levels
+    // Otherwise, just return the default pricing (without options or fancy subscription stuff)
+
+    $price = $this->price;
+
+    if(Cart66Common::isLoggedIn()) {
+      $levels = Cart66Common::trimmedExplode(',', $this->priceMembership);
+      foreach($levels as $level) {
+        list($subscription,$p) = Cart66Common::trimmedExplode(':', $level);
+        $membershipPriceList[$subscription] = $p;
+      }
+
+      $account = new Cart66Account();
+      if($account->load(Cart66Session::get('Cart66AccountId'))) {
+        $userFeatureLevel = $account->getFeatureLevel();
+        if($account->isActive() && array_key_exists($userFeatureLevel, $membershipPriceList)) {
+          $price = $membershipPriceList[$userFeatureLevel];
+        }
+      }
+    }
+    return $price; 
+  }
+
   /**
    * Return the price to charge at checkout.
    * For subscriptions this may also include the first recurring payment if the recurring start number is 0. 
    * This function will return the exact product price if:
    *  - The product is not a subscription product
    *  - The product is a subscription with a free trial period
+   *  - The product price is different for the logged in subscriber (ie: dropship or wholesale)
    */
   public function getCheckoutPrice() {
     $price = $this->price;
@@ -911,7 +936,10 @@ class Cart66Product extends Cart66ModelAbstract {
           $price += $plan->price;
         }
       }
-    }
+    } elseif($this->priceMembership != '') {
+      // Updating pricing for different membership levels
+      $price = $this->getMembershipPrice();
+    } 
     
     return $price;
   }
@@ -977,7 +1005,7 @@ class Cart66Product extends Cart66ModelAbstract {
           $priceDescription = $this->priceDescription;
         }
         else {
-          $priceDescription = $this->price + $priceDifference;
+          $priceDescription = $this->getMembershipPrice() + $priceDifference;
         }
       }
     }

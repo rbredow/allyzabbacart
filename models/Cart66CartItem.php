@@ -266,10 +266,8 @@ class Cart66CartItem {
       else{
         $price = $product->price;
       }
-      
-    }
-    else {
-      $price = $product->price + $this->_priceDifference;
+    } else {
+      $price = $product->getCheckoutPrice() + $this->_priceDifference;
     }
     
     return $price;
