@@ -158,6 +158,11 @@ $data['spreedly'] = $product->getSpreedlyProducts(null, null, '1');
                 <input type='text' style="width: 275px;" id="product-price_description" name='product[price_description]' value='<?php echo $product->priceDescription ?>'>
                 <span class="label_desc" id="price_description"><?php _e( 'If you would like to customize the display of the price' , 'cart66' ); ?></span>
               </li>
+              <li class="native_price" <?php if($product->gravity_form_pricing == 1) echo 'style="display:none;"'; ?>>
+                <label class="long" for="product-price_membership" id="price_membership_label"><?php _e( 'Membership pricing' , 'cart66' ); ?>:</label>
+                <input type='text' style="width: 275px;" id="product-price_membership" name='product[price_membership]' value='<?php echo $product->priceMembership ?>'>
+                <span class="label_desc" id="price_membership"><?php _e( 'ie: "wholesale:50,dropship:60"' , 'cart66' ); ?></span>
+              </li>
               <li class="isUserPrice native_price" <?php if($product->gravity_form_pricing == 1) echo 'style="display:none;"'; ?>>
                 <label class="long" for="product-is_user_price" id="is_user_price"><?php _e( 'User defined price' , 'cart66' ); ?>:</label>
                 <select id="product-is_user_price" name='product[is_user_price]'>
