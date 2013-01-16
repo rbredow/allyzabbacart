@@ -276,7 +276,11 @@ if(isset($data['resend']) && $data['resend'] == true) {
     echo $link.$order->ouid ;
     
   ?>" target="_blank"><?php _e( 'View Receipt Online' , 'cart66' ); ?></a> | 
-  <a href='#' id="print_version"><?php _e( 'Printer Friendly Receipt' , 'cart66' ); ?></a></p>
+  <a href='#' id="print_version"><?php _e( 'Printer Friendly Receipt' , 'cart66' ); ?></a> | 
+  <?php if (Cart66Setting::getValue('enable_endicia')) : ?>
+    <a href="<?php echo Cart66Endicia::shipLink($order)?>">Endicia</a> | 
+  <?php endif; ?>
+  <a href='#' id="packing_slip">Packing List</a> </p>
 
   <?php if(CART66_PRO): ?> | 
     <form id="EmailReceipt" action="" method='post' class="remove_tracking">
