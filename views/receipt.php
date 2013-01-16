@@ -207,6 +207,11 @@ if(!$ajaxRefresh) :
         <?php if(!empty($order->bill_country)): ?>
           <?php echo $order->bill_country ?><br/>
         <?php endif; ?>
+        <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['billing'])): ?><br />
+          <?php foreach($additional_fields['billing'] as $af): ?>
+            <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
+          <?php endforeach; ?>
+        <?php endif; ?>
         </p>
       </td>
       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -217,6 +222,11 @@ if(!$ajaxRefresh) :
         <?php endif; ?>
         <?php _e( 'Email' , 'cart66' ); ?>: <?php echo $order->email ?><br/>
         <?php _e( 'Date' , 'cart66' ); ?>: <?php echo date('m/d/Y g:i a', strtotime($order->ordered_on)) ?>
+        <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['payment'])): ?><br />
+          <?php foreach($additional_fields['payment'] as $af): ?>
+            <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
+          <?php endforeach; ?>
+        <?php endif; ?>
         </p>
       </td>
     </tr>
@@ -241,7 +251,11 @@ if(!$ajaxRefresh) :
             <?php if(!empty($order->ship_country)): ?>
               <?php echo $order->ship_country ?><br/>
             <?php endif; ?>
-      
+            <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['shipping'])): ?><br />
+              <?php foreach($additional_fields['shipping'] as $af): ?>
+                <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
+              <?php endforeach; ?>
+            <?php endif; ?>
           <?php endif; ?>
       
         <br/><em><?php _e( 'Delivery via' , 'cart66' ); ?>: <?php echo $order->shipping_method ?></em><br/>
@@ -260,6 +274,11 @@ if(!$ajaxRefresh) :
           <?php endif; ?>
           <?php _e( 'Email' , 'cart66' ); ?>: <?php echo $order->email ?><br/>
           <?php _e( 'Date' , 'cart66' ); ?>: <?php echo date('m/d/Y g:i a', strtotime($order->ordered_on)) ?>
+          <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['payment'])): ?><br />
+            <?php foreach($additional_fields['payment'] as $af): ?>
+              <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
+            <?php endforeach; ?>
+          <?php endif; ?>
           </p>
         </td>
       <?php endif; ?>

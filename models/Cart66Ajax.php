@@ -160,7 +160,7 @@ class Cart66Ajax {
       'state' => $s['state'],
       'zip' => $s['zip'],
       'tax' => Cart66Common::currency($tax),
-      'rate' => $rate = 0 ? '0.00' . '%' : Cart66Common::tax($rate),
+      'rate' => $rate == 0 ? '0.00%' : Cart66Common::tax($rate),
       'total' => Cart66Common::currency($total)
     );
     echo json_encode($result);

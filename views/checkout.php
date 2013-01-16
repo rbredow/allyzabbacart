@@ -77,7 +77,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
     
     // Note that mijireh does not have a "same as billing" checkbox
     if(isset($_POST['sameAsBilling'])) {
-      $gateway->setShipping(Cart66Common::postVal('billing'));
+      $gateway->setShipping(Cart66Common::postVal('billing'), true);
     }
     elseif(isset($_POST['shipping'])) {
       $gateway->setShipping(Cart66Common::postVal('shipping'));
@@ -326,7 +326,7 @@ if($gatewayName == 'Cart66Mijireh') {
   $checkoutFormFile =  '/views/mijireh/shipping_address.php';
 }
 elseif($gatewayName == 'Cart662Checkout') {
-  $checkoutFormFile =  '/views/2Checkout.php';
+  $checkoutFormFile =  '/views/2checkout.php';
 }
 else {
   $userViewFile = get_stylesheet_directory() . '/cart66-templates/views/checkout-form.php';
