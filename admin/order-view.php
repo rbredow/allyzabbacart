@@ -335,7 +335,7 @@ if(isset($data['resend']) && $data['resend'] == true) {
             <option value=""></option>
             <option value="FedEx"><?php _e( 'FedEx' , 'cart66' ); ?></option>
             <option value="UPS"><?php _e( 'UPS' , 'cart66' ); ?></option>
-            <option value="USPS"><?php _e( 'USPS' , 'cart66' ); ?></option>
+            <option value="USPS" selected><?php _e( 'USPS' , 'cart66' ); ?></option>
             <option value="DHL"><?php _e( 'DHL' , 'cart66' ); ?></option>
             <option value="CaPost"><?php _e( 'Canada Post' , 'cart66' ); ?></option>
             <option value="AuPost"><?php _e( 'Australia Post' , 'cart66' ); ?></option>
