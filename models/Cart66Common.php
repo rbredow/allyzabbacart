@@ -250,7 +250,8 @@ class Cart66Common {
 	
 	public static function getRandString($length = 14) {
 	  $string = '';
-    $chrs = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    //$chrs = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $chrs = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ'; // remove letters I and O to avoid confusion
     for($i=0; $i<$length; $i++) {
       $loc = mt_rand(0, strlen($chrs)-1);
       $string .= $chrs[$loc];
