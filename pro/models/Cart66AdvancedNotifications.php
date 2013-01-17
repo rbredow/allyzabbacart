@@ -169,7 +169,7 @@ class Cart66AdvancedNotifications extends Cart66Notifications {
       'to_name' => $orderFulfillment->name,
       'copy_to' => Cart66Setting::getValue($status . '_copy'),
       'head' => $head,
-      'subject' => Cart66Setting::getValue($status . '_subject'),
+      'subject' => $this->parseReceiptShortcodes(Cart66Setting::getValue($status . '_subject'), $this->_order->id, 'plain', null, null),
       'msg' => $this->getAdvancedEmailMessage($this->_order, $head['mime'], null, $status, $orderFulfillmentId),
       'msg_cc' => $this->getAdvancedEmailMessage($this->_order, $head['mime'], 'cc', $status, $orderFulfillmentId),
       'attachments' => null,
