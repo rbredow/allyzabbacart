@@ -77,8 +77,8 @@ if($session_token == $token):
         }
 
         if(is_object($promotion) && $promotion->apply_to == 'shipping'){
-          //$shipping = $shipping - Cart66Session::get('Cart66Cart')->getDiscountAmount();
-          //$discount = 0;
+          $shipping = $shipping - Cart66Session::get('Cart66Cart')->getDiscountAmount();
+          $discount = 0;
         }
       if(isset($_POST['tax']) && $_POST['tax'] > 0) {
         $tax = Cart66Common::postVal('tax');
@@ -271,7 +271,7 @@ if($session_token == $token):
     }
   
     if($isTaxed) {
-      $taxable = Cart66Session::get('Cart66Cart')->getTaxableAmount();
+      $taxable = Cart66Session::get('Cart66Cart')->getTaxableAmount($taxRate->tax_shipping);
       $tax = number_format($taxable * ($taxRate->rate/100), 2, '.', '');
       if($tax == 0) {
         $tax = Cart66Session::get('Cart66Cart')->getTax('All Sales');

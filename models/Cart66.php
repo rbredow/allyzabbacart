@@ -976,6 +976,7 @@ class Cart66 {
     add_shortcode('add_to_cart_anchor',           array($sc, 'showCartAnchor'));
     add_shortcode('cart',                         array($sc, 'showCart'));
     add_shortcode('cart66_download',              array($sc, 'downloadFile'));
+    add_shortcode('cart66_affiliate',             array($sc, 'cart66Affiliate'));
     add_shortcode('cancel_paypal_subscription',   array($sc, 'cancelPayPalSubscription'));
     add_shortcode('checkout_authorizenet',        array($sc, 'authCheckout'));
     add_shortcode('checkout_mijireh',             array($sc, 'mijirehCheckout'));
