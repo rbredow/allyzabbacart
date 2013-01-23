@@ -382,3 +382,4 @@ alter table `[prefix]orders` add column `additional_fields` longtext default '' 
 
 -- Upgrading to membership based pricing levels
 alter table `[prefix]products` add column `price_membership` varchar(255) not null;
+alter table `[prefix]promotions` add column `membership_eligibility` varchar(255) not null;
