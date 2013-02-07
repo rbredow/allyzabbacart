@@ -122,6 +122,7 @@ class Cart66Usps {
           $name = (string)$service->SvcDescription;
           $rate = (float)$service->Postage;
           $name = str_replace('&lt;sup&gt;&amp;reg;&lt;/sup&gt;', '', $name);
+          $name = str_replace('&lt;sup&gt;&amp;trade;&lt;/sup&gt;', '', $name);
           $name = str_replace('*', '', $name);
           $this->addRate($name, $rate);
           Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] USPS: Adding international rate ===> $name -- $rate");
