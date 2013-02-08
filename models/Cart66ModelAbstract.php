@@ -21,21 +21,11 @@ abstract class Cart66ModelAbstract extends Cart66BaseModelAbstract {
   }
   
   public function load($id) {
-    global $cart66Objects;
-
-    if(isset($cart66Objects[$this->_tableName][$id])){
-      $data = $cart66Objects[$this->_tableName][$id];
-      $this->setData($data);
-      return true;
-    }
-    else {
-      if(is_numeric($id) && $id > 0) {
-        $sql = 'SELECT * from ' . $this->_tableName . " WHERE id='$id'";
-        if($data = $this->_db->get_row($sql, ARRAY_A)) {
-          $this->setData($data);
-          $GLOBALS['cart66Objects'][$this->_tableName][$id] = $data;
-          return true;
-        }
+    if(is_numeric($id) && $id > 0) {
+      $sql = 'SELECT * from ' . $this->_tableName . " WHERE id='$id'";
+      if($data = $this->_db->get_row($sql, ARRAY_A)) {
+        $this->setData($data);
+        return true;
       }
     }
     return false;

@@ -292,7 +292,7 @@ class Cart66 {
   }
   
   public function check_cart66_pages_on_inline_edit(){
-    if(!empty($_POST) && $_POST['action'] == 'inline-save' && $_POST['post_type'] == 'page'){
+    if(!empty($_POST) && isset($_POST['action']) && $_POST['action'] == 'inline-save' && isset($_POST['post_type']) && $_POST['post_type'] == 'page'){
       global $inline_save_flag;
       if($inline_save_flag == 0){
         ?><tr>
