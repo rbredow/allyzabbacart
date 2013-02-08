@@ -248,7 +248,7 @@ class Cart66Common {
 		return $id;
 	}
 	
-	public static function getRandString($length = 14) {
+	public static function getRandString($length = 6) {
 	  $string = '';
     //$chrs = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $chrs = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ'; // remove letters I and O to avoid confusion
