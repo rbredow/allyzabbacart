@@ -370,6 +370,24 @@ if(count($errors)) {
               ?>
             </li>
           <?php endif; ?>
+
+          <?php if(Cart66Setting::getValue('sendy_url') && Cart66Setting::getValue('sendy_id')): ?>
+            <?php $lists = Cart66Setting::getValue('sendy_id'); ?>
+            <ul id="mailChimp">
+            <li>
+              <?php
+                if(!$optInMessage = Cart66Setting::getValue('sendy_message')) {
+                  $optInMessage = 'Yes, please sign me up to your newsletter.';
+                }
+                $sendy_id = Cart66Setting::getValue('sendy_id');
+
+                echo '<ul class="Cart66NewsletterList SendyList">';
+                echo "<li><input class=\"Cart66CheckboxList\" type=\"checkbox\" name=\"sendy_subscribe_id\" value=\"$sendy_id\" checked=\"true\"/> $optInMessage</li>";
+                echo '</ul>';
+              
+              ?>
+            </li>
+          <?php endif; ?>
       	</ul>
 
 			
