@@ -183,18 +183,18 @@ $data['accounts'] = $account->getModels('where id>0', 'order by last_name', '1')
             "sProcessing": "<?php _e('Processing', 'cart66'); ?>..." 
           }
         }).css('width', '');
-        $('.Cart66ViewAccountNote').live('click', function () {
+        $('.Cart66ViewAccountNote').on('click', function () {
           var id = $(this).attr('rel');
           $('#' + id).show();
           return false;
         });
-        $('.Cart66CloseNoteView').live('click', function () {
+        $('.Cart66CloseNoteView').on('click', function () {
           var id = $(this).attr('rel');
           $('#' + id).hide();
           return false;
         });
         
-        $('.delete').live('click', function() {
+        $('.delete').on('click', function() {
           return confirm('Are you sure you want to permanently delete this account?');
         });
 

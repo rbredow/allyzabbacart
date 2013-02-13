@@ -111,21 +111,23 @@ class Cart66AuthorizeNet extends Cart66GatewayAbstract {
         foreach( $this->fields as $key => $value ) {
            $this->field_string .= "$key=" . urlencode( $value ) . "&";
         }
-        $items = Cart66Session::get('Cart66Cart')->getItems();
-        foreach($items as $i) {
-          $itemNumber = str_replace("\t", " ", substr($i->getItemNumber(), 0, 31));
-          $product = new Cart66Product($i->getProductId());
-          $itemName = str_replace("\t", " ", substr($product->name, 0, 31));
-          $itemOptions = str_replace("\t", " ", substr($i->getOptionInfo(), 0, 29));
-          if($itemOptions != '') {
-            $itemOptions = '(' . $itemOptions . ')';
+        if(!Cart66Setting::getValue('disable_authorizenet_items')) {
+          $items = Cart66Session::get('Cart66Cart')->getItems();
+          foreach($items as $i) {
+            $itemNumber = str_replace("\t", " ", substr($i->getItemNumber(), 0, 31));
+            $product = new Cart66Product($i->getProductId());
+            $itemName = str_replace("\t", " ", substr($product->name, 0, 31));
+            $itemOptions = str_replace("\t", " ", substr($i->getOptionInfo(), 0, 29));
+            if($itemOptions != '') {
+              $itemOptions = '(' . $itemOptions . ')';
+            }
+            $itemQuantity = $i->getQuantity();
+            $itemTaxable = $product->taxable == 1 ? 'Y' : 'N';
+            $itemPrice = number_format($i->getProductPrice(), 2, '.', '');
+            $this->field_string .= "x_line_item=" . urlencode("$itemNumber<|>$itemName<|>$itemOptions<|>$itemQuantity<|>$itemPrice<|>$itemTaxable") . "&";
           }
-          $itemQuantity = $i->getQuantity();
-          $itemTaxable = $product->taxable == 1 ? 'Y' : 'N';
-          $itemPrice = number_format($i->getProductPrice(), 2, '.', '');
-          $this->field_string .= "x_line_item=" . urlencode("$itemNumber<|>$itemName<|>$itemOptions<|>$itemQuantity<|>$itemPrice<|>$itemTaxable") . "&";
         }
-
+        Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] string: " . $this->field_string);
         // Execute the HTTPS post via CURL
         $ch = curl_init($this->gateway_url); 
         curl_setopt($ch, CURLOPT_HEADER, 0); 

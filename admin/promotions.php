@@ -302,7 +302,7 @@ elseif(isset($_GET['task']) && $_GET['task'] == 'delete' && isset($_GET['id']) &
           "sProcessing": "<?php _e('Processing', 'cart66'); ?>..." 
         }
       });
-      $('.delete').live('click', function() {
+      $('.delete').on('click', function() {
         return confirm('Are you sure you want to delete this item?');
       });
       $(".promo-rows tr:nth-child(even)").css("background-color", "#fff");

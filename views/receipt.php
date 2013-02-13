@@ -464,6 +464,7 @@ if(!$ajaxRefresh) :
   <?php
     // Erase the shopping cart from the session at the end of viewing the receipt
     Cart66Session::drop('Cart66Cart');
+    Cart66Session::drop('PayPalProToken');
     Cart66Session::drop('Cart66Tax');
     Cart66Session::drop('Cart66Promotion');
     Cart66Session::drop('terms_acceptance');

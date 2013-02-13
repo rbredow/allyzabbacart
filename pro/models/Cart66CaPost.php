@@ -20,6 +20,7 @@ class Cart66CaPost {
       print 'Please set your credentials with the setCredentials function';
       die();
     }
+    $rate = array();
     $dest_zip = strtoupper(str_replace(' ', '', $dest_zip));
     $PostalCode = strtoupper(str_replace(' ', '', $PostalCode));
     

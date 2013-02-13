@@ -1349,7 +1349,7 @@ $mustache_elements = array(
             }, 'json');
           } 
         });
-        $('.delete').live('click', function() {
+        $('.delete').on('click', function() {
           return confirm('Are you sure you want to delete this item?');
         });
       
