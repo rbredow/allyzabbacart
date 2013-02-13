@@ -1678,7 +1678,7 @@ class Cart66Common {
   
   public static function tax($rate) {
     if($rate == 0) {
-      $rate = '0.00%';
+      $rate = '0.00';
     }
     if(is_numeric($rate)) {
       $rate = trim(number_format($rate, 3), 0);

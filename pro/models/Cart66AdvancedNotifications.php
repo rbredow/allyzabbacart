@@ -93,7 +93,7 @@ class Cart66AdvancedNotifications extends Cart66Notifications {
   public function sendStatusUpdateEmail($status) {
     $status = str_replace(' ', '_', $status);
     $isSent = false;
-    
+    $subject = $this->parseReceiptShortcodes(Cart66Setting::getValue($status . '_subject'), $this->_order->id, null, null);
     $from_name = Cart66Setting::getValue($status . '_from_name');
     $from_email = Cart66Setting::getValue($status . '_from_address');
     $head = $this->buildEmailHeader($from_name, $from_email);
@@ -104,7 +104,7 @@ class Cart66AdvancedNotifications extends Cart66Notifications {
       'to_name' => $this->_order->bill_first_name . ' ' . $this->_order->bill_last_name,
       'copy_to' => Cart66Setting::getValue($status . '_copy'),
       'head' => $head,
-      'subject' => Cart66Setting::getValue($status . '_subject'),
+      'subject' => $subject,
       'msg' => $this->getAdvancedEmailMessage($this->_order, $head['mime'], null, $status),
       'msg_cc' => $this->getAdvancedEmailMessage($this->_order, $head['mime'], 'cc', $status),
       'attachments' => null,
@@ -122,7 +122,7 @@ class Cart66AdvancedNotifications extends Cart66Notifications {
   
   public function sendAdvancedEmailReceipts($firstTime=true) {
     $isSent = false;
-    
+    $subject = $this->parseReceiptShortcodes(Cart66Setting::getValue('receipt_subject'), $this->_order->id, null, 'receipt');
     $from_email = Cart66Setting::getValue('receipt_from_address');
     $from_name = Cart66Setting::getValue('receipt_from_name');
     $head = $this->buildEmailHeader($from_name, $from_email);
@@ -133,7 +133,7 @@ class Cart66AdvancedNotifications extends Cart66Notifications {
       'to_name' => $this->_order->bill_first_name . ' ' . $this->_order->bill_last_name,
       'copy_to' => Cart66Setting::getValue('receipt_copy'),
       'head' => $head,
-      'subject' => Cart66Setting::getValue('receipt_subject'),
+      'subject' => $subject,
       'msg' => $this->getAdvancedEmailMessage($this->_order, $head['mime']),
       'msg_cc' => $this->getAdvancedEmailMessage($this->_order, $head['mime'], 'cc'),
       'attachments' => null,
@@ -158,7 +158,7 @@ class Cart66AdvancedNotifications extends Cart66Notifications {
     $isSent = false;
     
     $orderFulfillment = new Cart66OrderFulfillment($orderFulfillmentId);
-    
+    $subject = $this->parseReceiptShortcodes(Cart66Setting::getValue($status . '_subject'), $this->_order->id, null, $status);
     $from_email = Cart66Setting::getValue('fulfillment_from_address');
     $from_name = Cart66Setting::getValue('fulfillment_from_name');
     $head = $this->buildEmailHeader($from_name, $from_email);
@@ -169,7 +169,7 @@ class Cart66AdvancedNotifications extends Cart66Notifications {
       'to_name' => $orderFulfillment->name,
       'copy_to' => Cart66Setting::getValue($status . '_copy'),
       'head' => $head,
-      'subject' => Cart66Setting::getValue($status . '_subject'),
+      'subject' => $subject,
       'msg' => $this->getAdvancedEmailMessage($this->_order, $head['mime'], null, $status, $orderFulfillmentId),
       'msg_cc' => $this->getAdvancedEmailMessage($this->_order, $head['mime'], 'cc', $status, $orderFulfillmentId),
       'attachments' => null,
@@ -212,7 +212,7 @@ class Cart66AdvancedNotifications extends Cart66Notifications {
   public static function sendFollowupEmail($orderId) {
     Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] sending followup for $orderId");
     $isSent = false;
-    
+    $subject = $this->parseReceiptShortcodes(Cart66Setting::getValue('followup_subject'), $this->_order->id, null, 'followup');
     $notify = new Cart66AdvancedNotifications($orderId);
     
     $from_email = Cart66Setting::getValue('followup_from_address');
@@ -225,7 +225,7 @@ class Cart66AdvancedNotifications extends Cart66Notifications {
       'to_name' => $notify->_order->bill_first_name . ' ' . $notify->_order->bill_last_name,
       'copy_to' => Cart66Setting::getValue('followup_copy'),
       'head' => $head,
-      'subject' => Cart66Setting::getValue('followup_subject'),
+      'subject' => $subject,
       'msg' => $notify->getAdvancedEmailMessage($notify->_order, $head['mime'], null, 'followup'),
       'msg_cc' => $notify->getAdvancedEmailMessage($notify->_order, $head['mime'], 'cc', 'followup'),
       'attachments' => null,

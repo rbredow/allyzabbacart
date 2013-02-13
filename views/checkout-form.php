@@ -198,8 +198,8 @@ if(count($errors)) {
                 <?php
                 $disabled = false;
                 if(is_array($country_name)) {
-                  $country_name = $country_name['country'];
                   $disabled = isset($country_name['disabled']) ? $country_name['disabled'] : 'true';
+                  $country_name = $country_name['country'];
                 }
                 if($disabled == 'true') {
                   $disabled = 'disabled';

@@ -326,7 +326,8 @@ class Cart66Dialog {
           'checkout_paypal_express' => __('PayPal Express checkout button', 'cart66'),
           'clear_cart' => __('Clear the contents of the shopping cart', 'cart66'),
           'shopping_cart' => __('Show the Cart66 sidebar widget', 'cart66'),
-          'post_sale' => __('Display content one time immediately after a sale', 'cart66')
+          'post_sale' => __('Display content one time immediately after a sale', 'cart66'),
+          'cart66_affiliate' => __('Add order information to an affiliate URL that can be used inside the post_sale shortcode. The only attribute is "display"', 'cart66')
         );
         if(CART66_PRO){
           $shortcodes_pro = array(

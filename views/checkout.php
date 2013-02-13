@@ -355,7 +355,7 @@ $shipping_address_display = (!$same_as_billing || $gatewayName == 'Cart66Mijireh
 $billing_country = '';
 if(isset($b['country']) && !empty($b['country'])) {
   $billing_country = $b['country'];
-  $shipping_country = $s['country'];
+  $shipping_country = isset($s['country']) ? $s['country'] : $b['country'];
 }
 
 $error_field_names = array();
