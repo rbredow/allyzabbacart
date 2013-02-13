@@ -186,11 +186,11 @@ class Cart66ProCommon {
       'USPS First-Class Mail' => 'First-Class Mail Parcel',
       'USPS Express Mail' => 'Express Mail',
       'USPS Priority Mail' => 'Priority Mail',
-      'USPS Standard Post' => 'Standard Post',
+      'USPS Parcel Post' => 'Standard Post',
       'USPS Media Mail' => 'Media Mail',
       'USPS Express Mail International' => 'Express Mail International',
       'USPS Priority Mail International' => 'Priority Mail International',
-      'USPS First-Class Package International Service' => 'First-Class Package International Service'
+      'USPS First-Class Mail International' => 'First-Class Package International Service'
     );
     
     return $usaServices;

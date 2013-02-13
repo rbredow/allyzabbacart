@@ -813,3 +813,6 @@ span.subscriptionOrMembership {
   input#checkout-custom-field-single {
     width:250px;
   }
+  #msg {
+    width: 300px; margin: 10px 0px;
+  }

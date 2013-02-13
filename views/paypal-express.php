@@ -443,10 +443,10 @@ if($session_token == $token):
                 $cartImgPath .= '/';
               }
               $completeImgPath = $cartImgPath . 'complete-order.png';
-              echo "<input type='image' src='$completeImgPath' value='Complete Order' />";
+              echo "<input type='image' class='Cart66CompleteOrderButton' src='$completeImgPath' value='" . __('Complete Order', 'cart66') . "' />";
             }
             else {
-              echo "<input type='submit' class='Cart66ButtonPrimary' value='Complete Order' />";
+              echo "<input type='submit' class='Cart66CompleteOrderButton Cart66ButtonPrimary' value='" . __('Complete Order', 'cart66') . "' />";
             }
           ?>
         </li>
@@ -460,10 +460,10 @@ if($session_token == $token):
             $cartImgPath .= '/';
           }
           $completeImgPath = $cartImgPath . 'complete-order.png';
-          echo "<input type='image' src='$completeImgPath' value='Complete Order' />";
+          echo "<input type='image' class='Cart66CompleteOrderButton' src='$completeImgPath' value='" . __('Complete Order', 'cart66') . "' />";
         }
         else {
-          echo "<input type='submit' class='Cart66ButtonPrimary Cart66CompleteOrderButton' value='Complete Order' />";
+          echo "<input type='submit' class='Cart66ButtonPrimary Cart66CompleteOrderButton' value='" . __('Complete Order', 'cart66') . "' />";
         }
       ?>
       <p id="Cart66ReceiptExpectation"><?php _e( 'Your receipt will be on the next page and also emailed to you.' , 'cart66' ); ?></p>
@@ -471,6 +471,15 @@ if($session_token == $token):
     
     
     </form>
+    <script type="text/javascript">
+      (function($){
+        $(document).ready(function() {
+          $('.phorm2').submit(function(){
+            $(".Cart66CompleteOrderButton").attr("disabled", "disabled");
+          });
+        })
+      })(jQuery);
+    </script>
   <?php endif; ?>
 <?php else: ?>
   <?php

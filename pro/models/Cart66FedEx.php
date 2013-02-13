@@ -242,7 +242,7 @@ class Cart66FedEx {
               $rates[$service] = number_format((float) $r["rate"], 2, '.', '');
             }
           }
-          Cart66Common::log("LIVE RATE REMOTE RESULT ==> ZIP: $toZip Service: $service $code) Rate: $rates");
+          Cart66Common::log("LIVE RATE REMOTE RESULT ==> ZIP: $toZip Service: $service $code) Rate: " . print_r($rates, true));
         }
       }
     }

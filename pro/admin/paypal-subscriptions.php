@@ -291,7 +291,7 @@ if(isset($data['errors'])) {
           $('#subscription_trial_period_unit').val('none');
         }
       });
-      $('.delete').live('click', function() {
+      $('.delete').on('click', function() {
         return confirm('Are you sure you want to delete this item?');
       });
 
