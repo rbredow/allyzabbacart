@@ -70,7 +70,7 @@ class Cart66FedEx {
     $data .='      <v10:CarrierCodes>FDXE</v10:CarrierCodes>';
     $data .='      <v10:CarrierCodes>FDXG</v10:CarrierCodes>';
     $data .='      <v10:RequestedShipment>';
-    $data .='        <v10:ShipTimestamp>' . date("Y-m-d\TH:j:sP") . '</v10:ShipTimestamp>';
+    $data .='        <v10:ShipTimestamp>' . date("Y-m-d\TH:i:sP") . '</v10:ShipTimestamp>';
     $data .='        <v10:DropoffType>' . $pickupCode . '</v10:DropoffType>';
     //$data .= '       <v10:ServiceType>' . $service . '</v10:ServiceType>';
     $data .='        <v10:PackagingType>YOUR_PACKAGING</v10:PackagingType>';

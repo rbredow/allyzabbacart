@@ -117,6 +117,14 @@ if(count($errors)) {
               <p class="limited-countries-label-billing summary-message cart66-align-center"><?php _e('Available countries may be limited based on your selected shipping method', 'cart66'); ?></p>
             <?php endif; ?>
           </li>
+          <?php
+          $optional_billing_fields = apply_filters('cart66_after_billing_form', '');
+          if(is_array($optional_billing_fields)) {
+            foreach($optional_billing_fields as $field) {
+              echo Cart66Common::displayCustomFormField($field, $b);
+            }
+          }
+          ?>
         </ul>
 	</div><!-- #billingInfo -->
    
@@ -204,6 +212,14 @@ if(count($errors)) {
               <p class="limited-countries-label-shipping summary-message cart66-align-center"><?php _e('Available countries may be limited based on your selected shipping method', 'cart66'); ?></p>
             <?php endif; ?>
           </li>
+          <?php
+          $optional_shipping_fields = apply_filters('cart66_after_shipping_form', '');
+          if(is_array($optional_shipping_fields)) {
+            foreach($optional_shipping_fields as $field) {
+              echo Cart66Common::displayCustomFormField($field, $s);
+            }
+          }
+          ?>
         </ul>
      </div> <!--shippingInfo-->
 	
@@ -282,6 +298,14 @@ if(count($errors)) {
             <label for="payment-email"><?php _e( 'Email' , 'cart66' ); ?>:</label>
             <input type="text" id="payment-email" name="payment[email]" value="<?php Cart66Common::showValue($p['email']); ?>">
           </li>
+          <?php
+          $optional_payment_fields = apply_filters('cart66_after_payment_form', '');
+          if(is_array($optional_payment_fields)) {
+            foreach($optional_payment_fields as $field) {
+              echo Cart66Common::displayCustomFormField($field, $p);
+            }
+          }
+          ?>
           </ul>
 
         </div><!-- #paymentInfo -->

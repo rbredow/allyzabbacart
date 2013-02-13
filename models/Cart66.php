@@ -53,7 +53,7 @@ class Cart66 {
   }
   
   public function init() {
-    global $cart66Settings;
+    global $cart66Settings, $cart66Objects;
     $this->loadCoreModels();
     $this->initCurrencySymbols();
     $this->setDefaultPageRoles();
@@ -174,12 +174,12 @@ class Cart66 {
       add_action('wp_enqueue_scripts', array('Cart66', 'enqueueScripts'));
 
       if(CART66_PRO) {
-        add_action('wp_head', array($this, 'checkInventoryOnCheckout'));
-        add_action('wp_head', array($this, 'checkShippingMethodOnCheckout'));
-        add_action('wp_head', array($this, 'checkZipOnCheckout'));
-        add_action('wp_head', array($this, 'checkTermsOnCheckout'));
-        add_action('wp_head', array($this, 'checkMinAmountOnCheckout'));
-        add_action('wp_head', array($this, 'checkCustomFieldsOnCheckout'));
+        add_action('template_redirect', array($this, 'checkInventoryOnCheckout'));
+        add_action('template_redirect', array($this, 'checkShippingMethodOnCheckout'));
+        add_action('template_redirect', array($this, 'checkZipOnCheckout'));
+        add_action('template_redirect', array($this, 'checkTermsOnCheckout'));
+        add_action('template_redirect', array($this, 'checkMinAmountOnCheckout'));
+        add_action('template_redirect', array($this, 'checkCustomFieldsOnCheckout'));
         add_action('template_redirect', array($this, 'protectSubscriptionPages'));
         add_filter('wp_list_pages_excludes', array($this, 'hideStorePages'));
         add_filter('wp_list_pages_excludes', array($this, 'hidePrivatePages'));
@@ -635,8 +635,8 @@ class Cart66 {
   }
   
   public function registerAdminStyles() {
-    global $current_screen;
-    if(strpos($_SERVER['QUERY_STRING'], 'page=cart66') !== false || Cart66Common::isSlurpPage() || $current_screen->id === 'plugins') {
+    $screen = get_current_screen();
+    if(strpos($_SERVER['QUERY_STRING'], 'page=cart66') !== false || Cart66Common::isSlurpPage() || (is_object($screen) && $screen->id === 'plugins')) {
       if(version_compare(get_bloginfo('version'), '3.3', '<')) {
         $widgetCss = WPURL . '/wp-admin/css/widgets.css';
         wp_enqueue_style('widget-css', $widgetCss, null, CART66_VERSION_NUMBER, 'all');

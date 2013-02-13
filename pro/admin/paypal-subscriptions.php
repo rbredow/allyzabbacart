@@ -252,7 +252,7 @@ if(isset($data['errors'])) {
         //  null, null, 
         //  { "bSearchable": false }, 
         //  { "bSearchable": false },
-          { "bSearchable": false, "bSortable": false, "fnRender": function(oObj) { return '<a href="?page=cart66-paypal-subscriptions&task=edit&id=' + oObj.aData[0] + '"><?php _e( "Edit" , "cart66" ); ?></a> | <a class="delete" href="?page=cart66-paypal-subscriptions&task=delete&id=' + oObj.aData[0] + '"><?php _e( "Delete" , "cart66" ); ?></a>' }
+          { "mData": null, "bSearchable": false, "bSortable": false, "fnRender": function(oObj) { return '<a href="?page=cart66-paypal-subscriptions&task=edit&id=' + oObj.aData[0] + '"><?php _e( "Edit" , "cart66" ); ?></a> | <a class="delete" href="?page=cart66-paypal-subscriptions&task=delete&id=' + oObj.aData[0] + '"><?php _e( "Delete" , "cart66" ); ?></a>' }
         }],
         "oLanguage": { 
           "sZeroRecords": "<?php _e('No matching PayPal Subscriptions found', 'cart66'); ?>", 

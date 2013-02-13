@@ -48,7 +48,7 @@
           "bProcessing": true,
           "bServerSide": true,
           "bPagination": true,
-          "iDisplayLength": 30,
+          "iDisplayLength": 5,
           "aLengthMenu": [[5, 15, 20, 30], [5, 15, 20, 30]],
           "sPaginationType": "bootstrap",
           "bAutoWidth": false,
