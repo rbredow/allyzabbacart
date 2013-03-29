@@ -42,6 +42,14 @@ ajaxManager.run();
 (function($){
   $(document).ready(function(){
     $('.Cart66AjaxWarning').hide();
+    // Added to remove error on double-click when add to cart is clicked
+    $('.purAddToCart, .purAddToCartImage').click(function() {
+      if($(this).hasClass('ajax-button')) {
+        return false;
+      } else {
+        $(this).attr('disabled', 'disabled');
+      }
+    })
     $('.ajax-button').click(function() {
       var id = $(this).attr('id').replace('addToCart_', '');
       $('#task_' + id).val('ajax');
