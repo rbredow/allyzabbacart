@@ -109,7 +109,7 @@ if(isset($_GET['duid'])) {
   }
 }
 if(!$ajaxRefresh) :
-  if(Cart66Setting::getValue('enable_google_analytics') == 1 && Cart66Setting::getValue('use_other_analytics_plugin') == 'no'): ?>
+  if(Cart66Setting::getValue('enable_google_analytics') == 1 && !Cart66Setting::getValue('use_other_analytics_plugin')): ?>
     <script type="text/javascript">
       /* <![CDATA[ */
       var _gaq = _gaq || [];
@@ -510,7 +510,7 @@ if(!$ajaxRefresh) :
           $url = preg_replace('/http[s]*:/', 'http:', $url);
         }
       ?>
-      <?php if(Cart66Setting::getValue('use_other_analytics_plugin') == 'no'): ?>
+      <?php if(!Cart66Setting::getValue('use_other_analytics_plugin')): ?>
         <script type="text/javascript">
           /* <![CDATA[ */
             (function() {
