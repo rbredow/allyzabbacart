@@ -395,7 +395,7 @@ if(!$ajaxRefresh) :
             '<?php echo $order->trans_id; ?>',
             '<?php echo $product->item_number; ?>',
             '<?php echo nl2br($item->description) ?>',
-            '', // Item Category
+            '', /* Item Category */
             '<?php echo number_format($item->product_price, 2, ".", "") ?>',
             '<?php echo $item->quantity ?>'
           ]);
