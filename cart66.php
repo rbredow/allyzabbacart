@@ -3,7 +3,7 @@
 Plugin Name: Cart66 Professional
 Plugin URI: http://www.cart66.com
 Description: Wordpress Shopping Cart
-Version: 1.5.1.7
+Version: 1.5.1.8
 Author: Reality 66
 Author URI: http://www.Reality66.com
 Text Domain: cart66
@@ -41,7 +41,7 @@ if(!class_exists('Cart66')) {
     elseif (isset($network_plugin)) {
       $mj_plugin_file = $network_plugin;
     }
-    define('CART66_PATH', WP_PLUGIN_DIR . '/' . basename(dirname($mj_plugin_file)));
+    define('CART66_PATH', WP_PLUGIN_DIR . '/' . basename(dirname($mj_plugin_file)) . '/');
     define('CART66_URL', plugin_dir_url(CART66_PATH) . basename(dirname($mj_plugin_file)));
   }
 
@@ -99,7 +99,8 @@ function cart66_check_mail_plugins() {
   $wp_mail = true;
   $start = WP_PLUGIN_DIR;
   $plugin_files = array(
-    'wpmandrill.php'
+    'wpmandrill.php',
+    'wp-ses.php'
   );
   $dir_start = scandir($start);
 

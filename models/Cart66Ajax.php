@@ -407,7 +407,7 @@ class Cart66Ajax {
       $soldOutLabel = Cart66Setting::getValue('label_out_of_stock') ? strtolower(Cart66Setting::getValue('label_out_of_stock')) : __('out of stock', 'cart66');
       $result[1] = $p->name . " " . $optionsMsg . " is $soldOutLabel $out";
     }
-
+    
     $result = json_encode($result);
     echo $result;
     die();
@@ -423,20 +423,14 @@ class Cart66Ajax {
     $html = false;
     $job_id = $slurp_url;
     
-    wp_update_post(array('ID' => $page->ID, 'post_status' => 'publish'));
-    $remote = wp_remote_get($slurp_url);
-    if(!is_wp_error($remote) && $remote['response']['code'] == '200') {
-      $html = $remote['body'];
-    }
-    wp_update_post(array('ID' => $page->ID, 'post_status' => 'private'));
-    
-    if($html) {
+    if(wp_update_post(array('ID' => $page->ID, 'post_status' => 'publish'))) {
       $access_key = Cart66Setting::getValue('mijireh_access_key');
       $rest = new PestJSON(MIJIREH_CHECKOUT);
       $rest->setupAuth($access_key, '');
       $data = array(
         'url' => $slurp_url,
-        'html' => htmlentities($html, ENT_COMPAT | 0, 'UTF-8')
+        'page_id' => $page->ID,
+        'return_url' => add_query_arg('task', 'mijireh_page_slurp', $slurp_url)
       );
       
       try {
@@ -447,10 +441,9 @@ class Cart66Ajax {
         header('Bad Request', true, 400);
         die();
       }
-      
     }
     else {
-      Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] NO HTML!!!!");
+      $job_id = 'did not update post successfully';
     }
     
     echo $job_id;

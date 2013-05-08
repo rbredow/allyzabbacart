@@ -171,7 +171,7 @@ class Cart66SessionDb {
     self::_save();
     
     header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
-    setcookie("Cart66DBSID",self::$_data['session_id'] , false, "/", false);
+    setcookie("Cart66DBSID", self::$_data['session_id'], false, "/", false, false, true);
     
     self::_deleteExpiredSessions();
     return $data['session_id'];

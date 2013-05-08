@@ -183,21 +183,6 @@ $data['accounts'] = $account->getModels('where id>0', 'order by last_name', '1')
             "sProcessing": "<?php _e('Processing', 'cart66'); ?>..." 
           }
         }).css('width', '');
-        $('.Cart66ViewAccountNote').on('click', function () {
-          var id = $(this).attr('rel');
-          $('#' + id).show();
-          return false;
-        });
-        $('.Cart66CloseNoteView').on('click', function () {
-          var id = $(this).attr('rel');
-          $('#' + id).hide();
-          return false;
-        });
-        
-        $('.delete').on('click', function() {
-          return confirm('Are you sure you want to permanently delete this account?');
-        });
-
         $("#plan-feature_level").keydown(function(e) {
           if (e.keyCode == 32) {
             $(this).val($(this).val() + ""); // append '-' to input
@@ -232,6 +217,19 @@ $data['accounts'] = $account->getModels('where id>0', 'order by last_name', '1')
         
         $("#plan-active_until").datepicker();
       })
+      $(document).on('click', '.delete', function(e) {
+        return confirm('Are you sure you want to delete this item?');
+      });
+      $(document).on('click', '.Cart66ViewAccountNote', function(e) {
+        var id = $(this).attr('rel');
+        $('#' + id).show();
+        return false;
+      });
+      $(document).on('click', '.Cart66CloseNoteView', function(e) {
+        var id = $(this).attr('rel');
+        $('#' + id).hide();
+        return false;
+      });
     })(jQuery);
   </script> 
 <?php endif; ?>

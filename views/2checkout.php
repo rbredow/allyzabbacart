@@ -128,12 +128,11 @@ if($cart->requireShipping() || $cart->hasTaxableProducts()): ?>
           <?php endforeach; ?>
         </select>
       </li>
-      <li class="limited-countries-label-shipping summary-message cart66-align-center">
-        <?php if(Cart66Session::get('Cart66ShippingCountryCode') && Cart66Setting::getValue('international_sales')): ?>
+      <?php if(Cart66Session::get('Cart66ShippingCountryCode') && Cart66Setting::getValue('international_sales')): ?>
+        <li class="limited-countries-label-shipping summary-message cart66-align-center">
           <p><?php _e('Available countries may be limited based', 'cart66'); ?><br /><?php _e('on your selected shipping method', 'cart66'); ?></p>
-        <?php endif; ?>
-      </li>
-
+        </li>
+      <?php endif; ?>
       <li>
         <label for="payment-phone"><?php _e( 'Phone' , 'cart66' ); ?>:</label>
         <input type="text" id="payment-phone" name="payment[phone]" value="<?php Cart66Common::showValue($p['phone']); ?>">

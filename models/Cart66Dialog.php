@@ -281,7 +281,7 @@ class Cart66Dialog {
             </li>
             <li>
               <label for="ajaxOptions" ><?php  _e('Ajax Add To Cart'); ?>:</label>
-              <?php if(Cart66Setting::getValue('enable_ajax_by_default') && Cart66Setting::getValue('enable_ajax_by_default') == "yes"): ?>
+              <?php if(Cart66Setting::getValue('enable_ajax_by_default') && Cart66Setting::getValue('enable_ajax_by_default') == 1): ?>
                 <input type='radio' id="ajaxOptions" name="ajaxOptions" value='yes' checked> <?php _e('Yes', 'cart66'); ?>
                 <input type='radio' id="ajaxOptions" name="ajaxOptions" value='no'> <?php _e('No', 'cart66'); ?>
               <?php else: ?>

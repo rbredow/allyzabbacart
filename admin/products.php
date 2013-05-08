@@ -639,11 +639,6 @@ $data['spreedly'] = $product->getSpreedlyProducts(null, null, '1');
           $(".userPriceSettings").hide();
         }
       })
-
-      $('.delete').on('click', function() {
-        return confirm('Are you sure you want to delete this item?');
-      });
-
       // Ajax to populate gravity_form_qty_id when gravity_form_id changes
       $('#product-gravity_form_id').change(function() {
         var gravityFormId = $('#product-gravity_form_id').val();
@@ -715,6 +710,9 @@ $data['spreedly'] = $product->getSpreedlyProducts(null, null, '1');
          validateS3BucketName();        
       })
     })
+    $(document).on('click', '.delete', function(e) {
+      return confirm('Are you sure you want to delete this item?');
+    });
     function toggleLifeTime() {
       if($('#product-lifetime_membership').attr('checked')) {
         $('#product-billing_interval').val('');

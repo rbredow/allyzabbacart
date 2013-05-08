@@ -292,42 +292,43 @@ elseif(isset($_GET['task']) && $_GET['task'] == 'delete_rate' && isset($_GET['id
   if(CART66_PRO && Cart66Setting::getValue('use_live_rates')):
     require_once(CART66_PATH . "/pro/admin/shipping.php");  
   else: ?>
-    
-    <h3 style="clear: both;"><?php _e( 'Shipping Validation' , 'cart66' ); ?></h3>
-    <p style="width: 400px;"><?php _e( 'Set the options here whether or not to require shipping validation on the cart page.' , 'cart66' ); ?></p> 
+    <?php if(CART66_PRO): ?>
+      <h3 style="clear: both;"><?php _e( 'Shipping Validation' , 'cart66' ); ?></h3>
+      <p style="width: 400px;"><?php _e( 'Set the options here whether or not to require shipping validation on the cart page.' , 'cart66' ); ?></p> 
 
-    <form action="admin.php?page=cart66-shipping" method='post'>
-      <input type='hidden' name='cart66-action' value='save shipping validation' />
+      <form action="admin.php?page=cart66-shipping" method='post'>
+        <input type='hidden' name='cart66-action' value='save shipping validation' />
       
-      <table class="form-table">
-        <tbody>
-          <tr valign="top">
-            <th scope="row"><?php _e('Shipping Validation', 'cart66'); ?></th>
-            <td>
-              <input type="radio" value="1" name="require_shipping_validation" id="require_shipping_validation_yes"<?php echo Cart66Setting::getValue('require_shipping_validation') == 1 ? ' checked="checked"' : ''; ?> />
-              <label for="require_shipping_validation_yes"><?php _e('Yes', 'cart66'); ?></label>
-              <input type="radio" value="0" name="require_shipping_validation" id="require_shipping_validation_no"<?php echo Cart66Setting::getValue('require_shipping_validation') != 1 ? ' checked="checked"' : ''; ?> />
-              <label for="require_shipping_validation_no"><?php _e('No', 'cart66'); ?></label>
-            </td>
-          </tr>
-          <tr valign="top">
-            <th scope="row"><?php _e('Validation Label', 'cart66'); ?></th>
-            <td>
-              <input type="test" name="require_shipping_validation_label" value="<?php echo Cart66Setting::getValue('require_shipping_validation_label'); ?>" />
-              <p class="description"><?php _e('Enter the label for the option that asks the customer to select a shipping method and rate.  Default: Select a Shipping Method', 'cart66'); ?></p>
-            </td>
-          </tr>
-          <tr valign="top">
-            <th scope="row"></th>
-            <td>
-              <?php submit_button(__('Save', 'cart66')); ?>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <table class="form-table">
+          <tbody>
+          
+            <tr valign="top">
+              <th scope="row"><?php _e('Shipping Validation', 'cart66'); ?></th>
+              <td>
+                <input type="radio" value="1" name="require_shipping_validation" id="require_shipping_validation_yes"<?php echo Cart66Setting::getValue('require_shipping_validation') == 1 ? ' checked="checked"' : ''; ?> />
+                <label for="require_shipping_validation_yes"><?php _e('Yes', 'cart66'); ?></label>
+                <input type="radio" value="0" name="require_shipping_validation" id="require_shipping_validation_no"<?php echo Cart66Setting::getValue('require_shipping_validation') != 1 ? ' checked="checked"' : ''; ?> />
+                <label for="require_shipping_validation_no"><?php _e('No', 'cart66'); ?></label>
+              </td>
+            </tr>
+            <tr valign="top">
+              <th scope="row"><?php _e('Validation Label', 'cart66'); ?></th>
+              <td>
+                <input type="test" name="require_shipping_validation_label" value="<?php echo Cart66Setting::getValue('require_shipping_validation_label'); ?>" />
+                <p class="description"><?php _e('Enter the label for the option that asks the customer to select a shipping method and rate.  Default: Select a Shipping Method', 'cart66'); ?></p>
+              </td>
+            </tr>
+            <tr valign="top">
+              <th scope="row"></th>
+              <td>
+                <?php submit_button(__('Save', 'cart66')); ?>
+              </td>
+            </tr>
+          </tbody>
+        </table>
     
-    </form>
-    
+      </form>
+    <?php endif; ?>
     <h3 style="clear: both;"><?php _e( 'Shipping Methods' , 'cart66' ); ?></h3>
     <p style="width: 400px;"><?php _e( 'Create the shipping methods you will offer your customers. If no shipping price is defined for a product, the default rates entered here will be used to calculate shipping costs.' , 'cart66' ); ?></p> 
 
@@ -362,33 +363,35 @@ elseif(isset($_GET['task']) && $_GET['task'] == 'delete_rate' && isset($_GET['id
               <span class="label_desc"><?php _e( 'Rate for each additional item' , 'cart66' ); ?></span>
             </td>
           </tr>
-          <tr valign="top" class="eligible_countries_block">
-            <th scope="row"><?php _e('Eligible Countries', 'cart66'); ?></th>
-            <td>
-              <select id="countries" name="shipping_method[countries][]" class="multiselect" multiple="multiple">
-                <?php
-                  $countryList = unserialize($method->countries);
-                  $countryList = $countryList ? $countryList : array();
-                ?>
-                <?php
-                $countries = explode(',', Cart66Setting::getValue('countries'));
+          <?php
+          $countryList = unserialize($method->countries);
+          $countryList = $countryList ? $countryList : array();
+          $countries = array_filter(explode(',', Cart66Setting::getValue('countries')));
+          ?>
+          <?php if(count($countries) > 0 && Cart66Setting::getValue('international_sales')): ?>
+            <tr valign="top" class="eligible_countries_block">
+              <th scope="row"><?php _e('Eligible Countries', 'cart66'); ?></th>
+              <td>
+                <select id="countries" name="shipping_method[countries][]" class="multiselect" multiple="multiple">
+                  <?php
                 
-                foreach($countries as $c) {
-                  $ship_country = explode('~', $c);
-                  $ship_to_countries[$ship_country[0]] = $ship_country[1];
-                }
-                foreach($ship_to_countries as $code => $country): ?>
-                  <?php 
-                    $selected = (in_array($country, $countryList)) ? 'selected="selected"' : '';
-                    if(!empty($code)):
-                  ?>
-                    <option value="<?php echo $code . '~' . $country; ?>" <?php echo $selected ?>><?php echo $country ?></option>
-                  <?php endif; ?>
-                <?php endforeach; ?>
-              </select>
-              <span class="description"><?php _e('Select which countries you want this shipping method to apply to. Leave blank to apply to all countries. Only the countries selected in the main settings will appear in this list.', 'cart66'); ?></span>
-            </td>
-          </tr>
+                  foreach($countries as $c) {
+                    $ship_country = explode('~', $c);
+                    $ship_to_countries[$ship_country[0]] = $ship_country[1];
+                  }
+                  foreach($ship_to_countries as $code => $country): ?>
+                    <?php 
+                      $selected = (in_array($country, $countryList)) ? 'selected="selected"' : '';
+                      if(!empty($code)):
+                    ?>
+                      <option value="<?php echo $code . '~' . $country; ?>" <?php echo $selected ?>><?php echo $country ?></option>
+                    <?php endif; ?>
+                  <?php endforeach; ?>
+                </select>
+                <span class="description"><?php _e('Select which countries you want this shipping method to apply to. Leave blank to apply to all countries. Only the countries selected in the main settings will appear in this list.', 'cart66'); ?></span>
+              </td>
+            </tr>
+          <?php endif; ?>
           <tr valign="top">
             <th scope="row"></th>
             <td>

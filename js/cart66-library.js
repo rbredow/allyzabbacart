@@ -41,12 +41,16 @@ var ajaxManager = (function() {
 ajaxManager.run();
 (function($){
   $(document).ready(function(){
+    $('.purAddToCart, .purAddToCartImage').click(function() {
+      $(this).attr('disabled', 'disabled');
+    })
     $('.Cart66AjaxWarning').hide();
     // Added to remove error on double-click when add to cart is clicked
     $('.purAddToCart, .purAddToCartImage').click(function() {
         $(this).attr('disabled', 'disabled');
     })
     $('.ajax-button').click(function() {
+      $(this).attr('disabled', true);
       var id = $(this).attr('id').replace('addToCart_', '');
       $('#task_' + id).val('ajax');
       var product = C66.products[id];

@@ -1354,9 +1354,6 @@ $mustache_elements = array(
             }, 'json');
           } 
         });
-        $('.delete').on('click', function() {
-          return confirm('Are you sure you want to delete this item?');
-        });
       
         $('a.tab_function').click(function() {
           if($(this).hasClass('notifications-order_status_settings')) {
@@ -1558,6 +1555,9 @@ $mustache_elements = array(
           return url;
         }
       })
+      $(document).on('click', '.delete', function(e) {
+        return confirm('Are you sure you want to delete this item?');
+      });
     })(jQuery);
     $jq = jQuery.noConflict();
     function viewEmail(id) {

@@ -48,7 +48,7 @@ class Cart66 {
       wp_schedule_event($fixedtime, 'daily', 'daily_gravity_forms_entry_removal');
     }
     if(!wp_next_scheduled('daily_prune_pending_orders')) {
-      wp_schedule_event($fixedtime, 'daily', 'daily_prune_pending_orders');
+      wp_schedule_event($fixedtime, 'hourly', 'daily_prune_pending_orders');
     }
   }
   
@@ -82,7 +82,8 @@ class Cart66 {
       add_action('daily_subscription_reminder_emails', array('Cart66MembershipReminders', 'dailySubscriptionEmailReminderCheck'));
       add_action('daily_followup_emails', array('Cart66AdvancedNotifications', 'dailyFollowupEmailCheck'));
       add_action('daily_gravity_forms_entry_removal', array('Cart66GravityReader', 'dailyGravityFormsOrphanedEntryRemoval'));
-      add_action('daily_prune_pending_orders', array('Cart66Order', 'dailyPrunePendingPayPalOrders'));
+      $order = new Cart66Order();
+      add_action('daily_prune_pending_orders', array($order, 'dailyPrunePendingPayPalOrders'));
     }
     
     // Notification shortcodes
@@ -143,9 +144,7 @@ class Cart66 {
       add_action('media_buttons', array($this, 'addPageSlurpButton'), 12);
       
       // Load Dashboard Widget
-      if(Cart66Common::cart66UserCan('orders')) {
-        add_action('wp_dashboard_setup', array('Cart66Dashboard', 'cart66_add_dashboard_widgets' ));
-      }
+      add_action('wp_dashboard_setup', array('Cart66Dashboard', 'cart66_add_dashboard_widgets' ));
       
       if(CART66_PRO) {
         add_action('wp_ajax_update_gravity_product_quantity_field', array('Cart66Ajax', 'updateGravityProductQuantityField'));
@@ -183,14 +182,14 @@ class Cart66 {
         add_action('template_redirect', array($this, 'protectSubscriptionPages'));
         add_filter('wp_list_pages_excludes', array($this, 'hideStorePages'));
         add_filter('wp_list_pages_excludes', array($this, 'hidePrivatePages'));
-        add_filter('wp_nav_menu_items', array($this, 'filterPrivateMenuItems'), 10, 2);
+        add_filter('wp_nav_menu_objects', array($this, 'filter_private_menu_items'), 10, 2);
       }
       
       add_action('wp_head', array('Cart66Common', 'displayVersionInfo'));
       add_action('template_redirect', array($this, 'dontCacheMeBro'));
       add_action('shutdown', array('Cart66Session', 'touch'));
       add_action('wp_footer', array($order, 'updateViewed'));
-      if(Cart66Setting::getValue('use_other_analytics_plugin') == 'no') {
+      if(!Cart66Setting::getValue('use_other_analytics_plugin')) {
         add_action('wp_footer', array($order, 'addTrackingCode'));
       }
     }
@@ -231,11 +230,17 @@ class Cart66 {
       wp_redirect(remove_query_arg(array('cart66ItemId', 'product_url', 'task', $promotion_var_name), Cart66Common::getCurrentPageUrl()));
       exit;
     }
-    elseif($_SERVER['REQUEST_METHOD'] == 'GET' && Cart66Common::getVal('task') == 'mijireh-notification') {
+    elseif($_SERVER['REQUEST_METHOD'] == 'GET' && Cart66Common::getVal('task') == 'mijireh_notification') {
       require_once(CART66_PATH . "/gateways/Cart66Mijireh.php");
       $order_number = Cart66Common::getVal('order_number');
       $mijireh = new Cart66Mijireh();
       $mijireh->saveOrder($order_number);
+    }
+    elseif(isset($_GET['task']) && Cart66Common::getVal('task') == 'mijireh_page_slurp') {
+      $access_key = Cart66Setting::getValue('mijireh_access_key');
+      if(isset($_POST['access_key']) && isset($_POST['page_id']) && $_POST['access_key'] == $access_key) {
+        wp_update_post(array('ID' => $_POST['page_id'], 'post_status' => 'private'));
+      }
     }
     else {
       $promotion_var_name = Cart66Setting::getValue('promotion_get_varname') ? Cart66Setting::getValue('promotion_get_varname') : 'promotion';
@@ -405,42 +410,22 @@ class Cart66 {
   }
     
   
-  public function filterPrivateMenuItems($menuItems, $args=null) {
-    $links = explode("</li>", $menuItems);
-    $filteredMenuItems = '';
-    
+  public function filter_private_menu_items($items) {
     if(Cart66Common::isLoggedIn()) {
       // User is logged in so hide the guest only pages
-      $pageIds = Cart66AccessManager::getGuestOnlyPageIds();
+      $page_ids = Cart66AccessManager::getGuestOnlyPageIds();
     }
     else {
       // User is not logged in so hide the private pages
-      $pageIds = Cart66AccessManager::getPrivatePageIds();
+      $page_ids = Cart66AccessManager::getPrivatePageIds();
     }
-    
-    foreach($links as $link) {
-      $addLink = true;
-      $link = trim($link);
-      
-      if(empty($link)) {
-        $addLink = false;
-      }
-      else {
-        foreach($pageIds as $pageId) {
-          $permalink = get_permalink($pageId);
-          if(strpos($link, $permalink) !== false) {
-            $addLink = false;
-            break;
-          }
-        }
-      }
-         
-      if($addLink) {
-        $filteredMenuItems .= "$link</li>";
+    foreach($items as $key => $item) {
+      if(in_array($item->object_id, $page_ids)) {
+        unset($items[$key]);
       }
     }
     
-    return $filteredMenuItems;
+    return $items;
   }
   
   public static function enqueueScripts() {

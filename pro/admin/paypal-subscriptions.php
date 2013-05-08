@@ -291,15 +291,15 @@ if(isset($data['errors'])) {
           $('#subscription_trial_period_unit').val('none');
         }
       });
-      $('.delete').on('click', function() {
-        return confirm('Are you sure you want to delete this item?');
-      });
 
       $('.what_is').click(function() {
         $('#' + $(this).attr('id') + '_answer').toggle('slow');
         return false;
       });
     })
+    $(document).on('click', '.delete', function(e) {
+      return confirm('Are you sure you want to delete this item?');
+    });
     <?php if(isset($data['jqErrors']) && is_array($data['jqErrors'])): ?>
       <?php foreach($data['jqErrors'] as $val): ?>
         $('#<?php echo $val ?>').addClass('Cart66ErrorField');
