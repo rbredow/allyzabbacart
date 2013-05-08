@@ -191,7 +191,7 @@ class Cart66GravityReader {
                   }
                   $value = RGFormsModel::get_lead_field_value($lead, $field);
                   
-                  $display_value = GFCommon::get_lead_field_display($field, $value, $lead["currency"]);
+                  $display_value = GFCommon::get_lead_field_display($field, $value, $lead["currency"], Cart66Setting::getValue('gravity_display_option_labels'));
 
                   $display_value = apply_filters("gform_entry_field_value", $display_value, $field, $lead, $form);
 

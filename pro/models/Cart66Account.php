@@ -31,6 +31,7 @@ class Cart66Account extends Cart66ModelAbstract {
   public static function logout($redirectUrl=null) {
     if(Cart66Session::get('Cart66AccountId')) {
       Cart66Session::drop('Cart66AccountId');
+      Cart66Session::drop('Cart66AccessDeniedRedirect');
       Cart66Session::drop('Cart66ProRateAmount');
       if(isset($redirectUrl)) {
         $url = str_replace('cart66-task=logout', '', $redirectUrl);

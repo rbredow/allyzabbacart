@@ -302,9 +302,6 @@ elseif(isset($_GET['task']) && $_GET['task'] == 'delete' && isset($_GET['id']) &
           "sProcessing": "<?php _e('Processing', 'cart66'); ?>..." 
         }
       });
-      $('.delete').on('click', function() {
-        return confirm('Are you sure you want to delete this item?');
-      });
       $(".promo-rows tr:nth-child(even)").css("background-color", "#fff");
       setPromoSign();
       $('#promo-type').change(function () {
@@ -328,6 +325,9 @@ elseif(isset($_GET['task']) && $_GET['task'] == 'delete' && isset($_GET['id']) &
       $(".to").datetimepicker({ changeMonth: true, numberOfMonths: 2, ampm: true, hour: 23, minute: 59 })
       $('#Cart66AccountSearchField').quicksearch('table tbody tr');
     })
+    $(document).on('click', '.delete', function(e) {
+      return confirm('Are you sure you want to delete this item?');
+    });
     function productSearchUrl() {
       var url = ajaxurl + '?action=promotionProductSearch';
       return url;

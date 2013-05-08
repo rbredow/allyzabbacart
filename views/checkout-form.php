@@ -434,7 +434,7 @@ if(count($errors)) {
         <?php endif; ?>
         <input type="hidden" name="confirm_url" value="<?php echo $url; ?>" id="confirm-url" />
         <?php if($cartImgPath): ?>
-          <input id="Cart66CheckoutButton" class="confirm-order" type="image" src='<?php echo $completeImgPath ?>' value="<?php _e( 'Complete Order' , 'cart66' ); ?>" name="Complete Order"/>
+          <input id="Cart66CheckoutButton" class="confirm-order Cart66CompleteOrderButton" type="image" src='<?php echo $completeImgPath ?>' value="<?php _e( 'Complete Order' , 'cart66' ); ?>" name="Complete Order"/>
         <?php else: ?>
           <input id="Cart66CheckoutButton" class="confirm-order Cart66ButtonPrimary Cart66CompleteOrderButton" type="submit"  value="<?php _e( 'Complete Order' , 'cart66' ); ?>" name="Complete Order"/>
         <?php endif; ?>

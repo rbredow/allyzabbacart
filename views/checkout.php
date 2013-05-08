@@ -321,12 +321,12 @@ $billingCountryCode =  (isset($b['country']) && !empty($b['country'])) ? $b['cou
 $shippingCountryCode = (isset($s['country']) && !empty($s['country'])) ? $s['country'] : Cart66Common::getHomeCountryCode();
 
 // Include the HTML markup for the checkout form
-$checkoutFormFile = '/views/checkout-form.php';
+$checkoutFormFile = CART66_PATH . '/views/checkout-form.php';
 if($gatewayName == 'Cart66Mijireh') {
-  $checkoutFormFile =  '/views/mijireh/shipping_address.php';
+  $checkoutFormFile =  CART66_PATH . '/views/mijireh/shipping_address.php';
 }
 elseif($gatewayName == 'Cart662Checkout') {
-  $checkoutFormFile =  '/views/2checkout.php';
+  $checkoutFormFile =  CART66_PATH . '/views/2checkout.php';
 }
 else {
   $userViewFile = get_stylesheet_directory() . '/cart66-templates/views/checkout-form.php';
@@ -337,7 +337,7 @@ else {
 Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Using Checkout Form File :: $checkoutFormFile");
 
 ob_start();
-include(CART66_PATH . $checkoutFormFile);
+include($checkoutFormFile);
 $checkoutFormFileContents = ob_get_contents();
 ob_end_clean();
 echo Cart66Common::minifyMarkup($checkoutFormFileContents);
