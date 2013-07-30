@@ -16,11 +16,7 @@ class Cart66ProCommon {
   
   public static function getUpdatePluginsOption($option) {
     $pluginName = "cart66/cart66.php";
-    $versionInfo = get_transient('_cart66_version_request');
-    if(!$versionInfo) {
-      $versionInfo = Cart66ProCommon::getVersionInfo();
-      set_transient('_cart66_version_request', $versionInfo, 43200);
-    }
+    $versionInfo = Cart66ProCommon::getVersionInfo();
     if(is_array($versionInfo)) {
 
       $cart66Option = isset($option->response[$pluginName]) ? $option->response[$pluginName] : '';
@@ -66,11 +62,8 @@ class Cart66ProCommon {
       $raw = wp_remote_request($callBackLink, $options);
       Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Version info from remote request: " . print_r($raw, 1));
       if (!is_wp_error($raw) && 200 == $raw['response']['code']) {
-        $body = $raw['body'];
-        if(strncmp('1~', $body, 2) === 0) {
-          $info = explode("~", $raw['body']);
-          $versionInfo = array("isValidKey" => $info[0], "version" => $info[1], "url" => $info[2]);
-        }
+        $info = explode("~", $raw['body']);
+        $versionInfo = array("isValidKey" => $info[0], "version" => $info[1], "url" => $info[2]);
       }
     }
     return $versionInfo;      
@@ -109,7 +102,7 @@ class Cart66ProCommon {
       $orderNumber = Cart66Setting::getValue('order_number');
 
       if($orderNumber) {
-        $url = 'http://cart66.com/pro/change-log/';
+        $url = 'http://cart66.com/latest-cart66/';
         $ch = curl_init();
         $timeout = 5;
         curl_setopt($ch,CURLOPT_URL,$url);
