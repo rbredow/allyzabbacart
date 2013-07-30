@@ -18,9 +18,10 @@ class Cart66Ajax {
   
   public function forcePluginUpdate(){
     $output = false;
-    if(update_option('_site_transient_update_plugins', '') && update_option('_transient_update_plugins', '') ){
-      $output = true;
-    }
+    update_option('_site_transient_update_plugins', '');
+    update_option('_transient_update_plugins', '');
+    delete_transient('_cart66_version_request');
+    $output = true;
     echo $output;
     die();
   }
@@ -80,7 +81,7 @@ class Cart66Ajax {
   public static function viewLoggedEmail() {
     if(isset($_POST['log_id'])) {
       $emailLog = new Cart66EmailLog($_POST['log_id']);
-      echo nl2br(htmlentities($emailLog->headers . "\r\n" . $emailLog->body));
+      echo nl2br(htmlentities($emailLog->headers . "\r\n" . $emailLog->body, ENT_COMPAT, 'UTF-8'));
       die();
     }
   }
@@ -296,7 +297,9 @@ class Cart66Ajax {
             $value = implode('~', $value);
           }
         }
-
+        if($key == 'status_options') {
+          $value = str_replace('&', '', Cart66Common::deepTagClean($value));
+        }
         if($key == 'home_country') {
           $hc = Cart66Setting::getValue('home_country');
           if($hc != $value) {
@@ -336,7 +339,11 @@ class Cart66Ajax {
         Cart66Setting::setValue($key, trim(stripslashes($value)));
 
         if(CART66_PRO && $key == 'order_number') {
-          $versionInfo = Cart66ProCommon::getVersionInfo();
+          $versionInfo = get_transient('_cart66_version_request');
+          if(!$versionInfo) {
+            $versionInfo = Cart66ProCommon::getVersionInfo();
+            set_transient('_cart66_version_request', $versionInfo, 43200);
+          }
           if(!$versionInfo) {
             Cart66Setting::setValue('order_number', '');
             $error = '<span>' . __( 'Invalid Order Number' , 'cart66' ) . '</span>';

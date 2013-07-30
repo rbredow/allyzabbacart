@@ -37,7 +37,7 @@ if(!$test) {
                   </td>
                   <td style="font-weight:normal;font-size: 11px;">
                     <span style="font-weight:bold;"><?php _e('Purchased', 'cart66'); ?></span>
-                    <br><?php echo date('F d, Y', strtotime($order->ordered_on)); ?>
+                    <br><?php echo date(get_option('date_format'), strtotime($order->ordered_on)); ?>
                   </td>
                 </tr>
               </table>
@@ -119,7 +119,7 @@ if(!$test) {
   }
   else {
     $msg = __("Order Number","cart66") . ": " . $order->trans_id . "\n";
-    $msg .= __("Purchased","cart66") . " " . date('F d, Y', strtotime($order->ordered_on)) . "\n\n";
+    $msg .= __("Purchased","cart66") . " " . date(get_option('date_format'), strtotime($order->ordered_on)) . "\n\n";
     $msg .= __("Order Followup","cart66") . "\n\n";
     if(Cart66Setting::getValue('followup_message_intro')) {
       $msg .= Cart66Setting::getValue('followup_plain_email') . "\n\n";
@@ -175,7 +175,7 @@ else {
                   </td>
                   <td style="font-weight:normal;font-size: 11px;">
                     <span style="font-weight:bold;"><?php _e('Purchased', 'cart66'); ?></span>
-                    <br><?php echo date('F d, Y', time()); ?>
+                    <br><?php echo date(get_option('date_format'), time()); ?>
                   </td>
                 </tr>
               </table>

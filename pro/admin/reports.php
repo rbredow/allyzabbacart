@@ -160,7 +160,7 @@
   <?php for($i=0; $i<count($data['days']); $i++): ?>
     <?php if($i % 7 == 0) { echo '<tr>'; } ?>
     <td>
-      <span style="color: #999; font-size: 11px;"><?php echo date('m/d/Y D', strtotime($data['days'][$i], Cart66Common::localTs())); ?></span><br/>
+      <span style="color: #999; font-size: 11px;"><?php echo date(get_option('date_format'), strtotime($data['days'][$i], Cart66Common::localTs())); ?></span><br/>
       <?php echo Cart66Common::currency($data['totals'][$i]); ?>
     </td>
     <?php if($i % 7 == 6) { echo '</tr>'; } ?>

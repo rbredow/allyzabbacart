@@ -32,7 +32,9 @@ class Cart66AccessManager {
       )
     ));
     foreach($query->posts as $post) {
-      $private_posts[] = $post->ID;
+      if($post->ID > 0) {
+        $private_posts[] = $post->ID;
+      }
     }
     return $private_posts;
   }

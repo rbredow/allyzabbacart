@@ -107,7 +107,8 @@ class Cart66PayPalPro extends Cart66PayPalExpressCheckout {
       'ITEMAMT' => $itemTotal,
       'SHIPPINGAMT' => $shipping,
       'TAXAMT' => $tax,
-      'CURRENCYCODE' => $currencyCode
+      'CURRENCYCODE' => $currencyCode,
+      'BUTTONSOURCE' => 'Reality66_SP'
     );
     
     // Add cart items to PayPal

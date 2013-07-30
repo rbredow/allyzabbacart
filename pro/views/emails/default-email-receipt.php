@@ -37,7 +37,7 @@ if(!$test) {
                   </td>
                   <td style="font-weight:normal;font-size: 11px;">
                     <span style="font-weight:bold;"><?php _e('Purchased', 'cart66'); ?></span>
-                    <br><?php echo date('F d, Y', strtotime($order->ordered_on)); ?>
+                    <br><?php echo date(get_option('date_format'), strtotime($order->ordered_on)); ?>
                   </td>
                 </tr>
               </table>
@@ -70,6 +70,11 @@ if(!$test) {
                       ?>
                       <?php echo $order->bill_city; ?> <?php echo $order->bill_state; ?><?php echo $order->bill_zip != null ? ',' : ''; ?> <?php echo $order->bill_zip; ?><br />
                       <?php echo $order->bill_country; ?><br />
+                      <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['billing'])): ?><br />
+                        <?php foreach($additional_fields['billing'] as $af): ?>
+                          <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
+                        <?php endforeach; ?>
+                      <?php endif; ?>
                     </span>
                   </td>
                   <td bgcolor="#f9f9f9" style="font-family: Arial, Verdana, sans-serif; padding: 10px 25px 0px 15px; font-size: 12px; color:#333;width:51%;text-align:left;vertical-align:top;" >
@@ -82,7 +87,12 @@ if(!$test) {
                       }
                       ?>
                       <?php _e( 'Email' , 'cart66' ); ?>: <?php echo $order->email ?><br/>
-                      <?php _e( 'Date' , 'cart66' ); ?>: <?php echo date('m/d/Y g:i a', strtotime($order->ordered_on)) ?><br /><br />
+                      <?php _e( 'Date' , 'cart66' ); ?>: <?php echo date(get_option('date_format'), strtotime($order->ordered_on)) ?> <?php echo date(get_option('time_format'), strtotime($order->ordered_on)) ?><br /><br />
+                      <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['payment'])): ?><br />
+                        <?php foreach($additional_fields['payment'] as $af): ?>
+                          <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
+                        <?php endforeach; ?>
+                      <?php endif; ?>
                     </span>
                   </td>
                 </tr>
@@ -106,6 +116,11 @@ if(!$test) {
 
                           <?php if(!empty($order->ship_country)): ?>
                             <?php echo $order->ship_country ?><br/>
+                          <?php endif; ?>
+                          <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['shipping'])): ?><br />
+                            <?php foreach($additional_fields['shipping'] as $af): ?>
+                              <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
+                            <?php endforeach; ?>
                           <?php endif; ?>
                         </span>
                         <br/><em><?php _e( 'Delivery via' , 'cart66' ); ?>: <?php echo $order->shipping_method ?></em><br/>
@@ -345,13 +360,16 @@ if(!$test) {
         $msg .= $order->ship_address2 . "\n";
       }
       $msg .= $order->ship_city . ' ' . $order->ship_state . ' ' . $order->ship_zip . "\n" . $order->ship_country . "\n";
-
+      if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['shipping'])) {
+        foreach($additional_fields['shipping'] as $af) {
+          $msg .= html_entity_decode($af['label']) . ': ' . $af['value'] . "\n";
+        }
+      }
       $msg .= "\n" . __("Delivery via","cart66") . ": " . $order->shipping_method . "\n";
     }
-
-
+    
     $msg .= "\n\n" . __("BILLING INFORMATION","cart66") . "\n\n";
-
+    
     $msg .= $order->bill_first_name . ' ' . $order->bill_last_name . "\n";
     $msg .= $order->bill_address . "\n";
     if(!empty($order->bill_address2)) {
@@ -360,16 +378,24 @@ if(!$test) {
     $msg .= $order->bill_city . ' ' . $order->bill_state;
     $msg .= $order->bill_zip != null ? ', ' : ' ';
     $msg .= $order->bill_zip . "\n" . $order->bill_country . "\n";
-
+    if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['billing'])) {
+      foreach($additional_fields['billing'] as $af) {
+        $msg .= html_entity_decode($af['label']) . ': ' . $af['value'] . "\n";
+      }
+    }
     if(!empty($order->phone)) {
       $phone = Cart66Common::formatPhone($order->phone);
       $msg .= "\n" . __("Phone","cart66") . ": $phone\n";
     }
-
+    
     if(!empty($order->email)) {
       $msg .= __("Email","cart66") . ': ' . $order->email . "\n";
     }
-
+    if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['payment'])) {
+      foreach($additional_fields['payment'] as $af) {
+        $msg .= html_entity_decode($af['label']) . ': ' . $af['value'] . "\n";
+      }
+    }
     $receiptPage = get_page_by_path('store/receipt');
     $link = get_permalink($receiptPage->ID);
     if(strstr($link,"?")){
@@ -378,7 +404,7 @@ if(!$test) {
     else{
       $link .= '?ouid=' . $order->ouid;
     }
-
+    
     if($hasDigital) {
       $msg .= "\n" . __('DOWNLOAD LINK','cart66') . "\n" . __('Click the link below to download your order.','cart66') . "\n$link";
     }
@@ -426,7 +452,7 @@ else {
                   </td>
                   <td style="font-weight:normal;font-size: 11px;">
                     <span style="font-weight:bold;"><?php _e('Purchased', 'cart66'); ?></span>
-                    <br><?php echo date('F d, Y', time()); ?>
+                    <br><?php echo date(get_option('date_format'), time()); ?>
                   </td>
                 </tr>
               </table>
@@ -462,7 +488,7 @@ else {
                     <span style="font-weight: bold;">
                       <?php _e('Phone: (900) 123-6598', 'cart66'); ?>
                       <?php _e( 'Email' , 'cart66' ); ?>: <?php _e('johndoe@mydomain.min', 'cart66'); ?><br/>
-                      <?php _e( 'Date' , 'cart66' ); ?>: <?php echo date('m/d/Y g:i a', time()) ?><br /><br />
+                      <?php _e( 'Date' , 'cart66' ); ?>: <?php echo date(get_option('date_format'), time()) ?> <?php echo date(get_option('time_format'), time()) ?><br /><br />
                     </span>
                   </td>
                 </tr>

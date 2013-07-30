@@ -18,7 +18,7 @@ class Cart66Usps {
     $ounces += $weight->ounces;
     $rateReq = 'RateV4Request USERID="' . $this->_uspsUsername . '"';
     $data = array(
-      'Revision' => '2',
+      'Revision' => '4',
       'Package ID="1"' => array(
         'Service' => 'ALL',
         'ZipOrigination' => $zipOrigin,
@@ -51,7 +51,7 @@ class Cart66Usps {
     $ounces += $weight->ounces;
     
     $data = array(
-      'Revision' => '2',
+      'Revision' => '4',
       'Package ID="1"' => array(
         'Pounds' => $pounds,
         'Ounces' => $ounces,
@@ -94,8 +94,10 @@ class Cart66Usps {
         foreach($xml->Package->Postage as $service) {
           $name = (string)$service->MailService;
           $rate = (float)$service->Rate;
-          $name = str_replace('&lt;sup&gt;&amp;reg;&lt;/sup&gt;', '', $name);
-          $name = str_replace('&lt;sup&gt;&amp;trade;&lt;/sup&gt;', '', $name);
+          $name = str_replace('&lt;sup&gt;&#174;&lt;/sup&gt;', '', $name);
+          $name = str_replace('&lt;sup&gt;&#8482;&lt;/sup&gt;', '', $name);
+          $name = trim(str_replace(' 1-Day', '', $name));
+          $name = trim(str_replace(' 2-Day', '', $name));
           $this->addRate($name, $rate);
         }
       }
@@ -121,8 +123,10 @@ class Cart66Usps {
         foreach($xml->Package->Service as $service) {
           $name = (string)$service->SvcDescription;
           $rate = (float)$service->Postage;
-          $name = str_replace('&lt;sup&gt;&amp;reg;&lt;/sup&gt;', '', $name);
-          $name = str_replace('&lt;sup&gt;&amp;trade;&lt;/sup&gt;', '', $name);
+          $name = str_replace('&lt;sup&gt;&#174;&lt;/sup&gt;', '', $name);
+          $name = str_replace('&lt;sup&gt;&#8482;&lt;/sup&gt;', '', $name);
+          $name = trim(str_replace(' 1-Day', '', $name));
+          $name = trim(str_replace(' 2-Day', '', $name));
           $name = str_replace('*', '', $name);
           $this->addRate($name, $rate);
           Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] USPS: Adding international rate ===> $name -- $rate");
