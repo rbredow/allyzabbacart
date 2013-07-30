@@ -456,7 +456,7 @@ class Cart66Product extends Cart66ModelAbstract {
         $opt = str_replace('+$', '+ $', $opt);
         $opt = trim($opt);
         $optDisplay = str_replace('$', CART66_CURRENCY_SYMBOL, $opt);
-        $select .= "\n\t<option value=\"" . htmlentities($opt) . "\">$optDisplay</option>";
+        $select .= "\n\t<option value=\"" . htmlentities($opt, ENT_COMPAT, 'UTF-8') . "\">$optDisplay</option>";
       }
       $select .= "\n</select>";
     }

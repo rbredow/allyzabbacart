@@ -15,6 +15,11 @@ if($data['type'] == 'html'): ?>
           ?>
           <?php echo $order->bill_city; ?> <?php echo $order->bill_state; ?><?php echo $order->bill_zip != null ? ',' : ''; ?> <?php echo $order->bill_zip; ?><br />
           <?php echo $order->bill_country; ?><br />
+          <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['billing'])): ?><br />
+            <?php foreach($additional_fields['billing'] as $af): ?>
+              <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
+            <?php endforeach; ?>
+          <?php endif; ?>
         </span>
       </td>
       <td class="contact_information_column" width="50%" style="vertical-align:top;">
@@ -27,7 +32,12 @@ if($data['type'] == 'html'): ?>
           }
           ?>
           <?php _e( 'Email' , 'cart66' ); ?>: <?php echo $order->email ?><br/>
-          <?php _e( 'Date' , 'cart66' ); ?>: <?php echo date('m/d/Y g:i a', strtotime($order->ordered_on)) ?><br /><br />
+          <?php _e( 'Date' , 'cart66' ); ?>: <?php echo date(get_option('date_format'), strtotime($order->ordered_on)) ?> <?php echo date(get_option('time_format'), strtotime($order->ordered_on)) ?><br /><br />
+          <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['payment'])): ?><br />
+            <?php foreach($additional_fields['payment'] as $af): ?>
+              <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
+            <?php endforeach; ?>
+          <?php endif; ?>
         </span>
       </td>
     </tr>
@@ -51,6 +61,11 @@ if($data['type'] == 'html'): ?>
 
               <?php if(!empty($order->ship_country)): ?>
                 <?php echo $order->ship_country ?><br/>
+              <?php endif; ?>
+              <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['shipping'])): ?><br />
+                <?php foreach($additional_fields['shipping'] as $af): ?>
+                  <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
+                <?php endforeach; ?>
               <?php endif; ?>
             </span>
             <br/><span class="delivery_method_content"><?php _e( 'Delivery via' , 'cart66' ); ?>: <?php echo $order->shipping_method ?></span><br/>
@@ -200,6 +215,7 @@ if($data['type'] == 'html'): ?>
 <?php elseif($data['type'] == 'plain'):
   $product = new Cart66Product();
   $hasDigital = false;
+  $msg = '';
   foreach($order->getItems() as $item) {
     $product->load($item->product_id);
     if($product->isDigital()) {
@@ -207,76 +223,88 @@ if($data['type'] == 'html'): ?>
     }
     $price = $item->product_price * $item->quantity;
     // echo "Item: " . $item->item_number . ' ' . $item->description . "\n";
-    echo __("Item","cart66") . ": ";
+    $msg .= __("Item","cart66") . ": ";
     if(Cart66Setting::getValue('display_item_number_receipt')) {
-      echo $item->item_number . ' ';
+      $msg .= $item->item_number . ' ';
     }
-    echo $item->description . "\n";
+    $msg .= $item->description . "\n";
     if($product->isDigital()) {
       $receiptPage = get_page_by_path('store/receipt');
       $receiptPageLink = get_permalink($receiptPage);
       $receiptPageLink .= (strstr($receiptPageLink, '?')) ? '&duid=' . $item->duid : '?duid=' . $item->duid;
-      echo $receiptPageLink . "\n\n";
+      $msg .= $receiptPageLink . "\n\n";
     }
     if($item->quantity > 1) {
-      echo __("Quantity","cart66") . ": " . $item->quantity . "\n";
+      $msg .= __("Quantity","cart66") . ": " . $item->quantity . "\n";
     }
-    echo __("Item Price","cart66") . ": " . Cart66Common::currency($item->product_price, false) . "\n";
-    echo __("Item Total","cart66") . ": " . Cart66Common::currency($item->product_price * $item->quantity, false) . "\n\n";
+    $msg .= __("Item Price","cart66") . ": " . Cart66Common::currency($item->product_price, false) . "\n";
+    $msg .= __("Item Total","cart66") . ": " . Cart66Common::currency($item->product_price * $item->quantity, false) . "\n\n";
     
     if($product->isGravityProduct()) {
-      echo Cart66GravityReader::displayGravityForm($item->form_entry_ids, true);
+      $msg .= Cart66GravityReader::displayGravityForm($item->form_entry_ids, true);
     }
   }
-
+  
   if($order->shipping_method != 'None' && $order->shipping_method != 'Download') {
-    echo __("Shipping","cart66") . ": " . Cart66Common::currency($order->shipping) . "\n";
+    $msg .= __("Shipping","cart66") . ": " . Cart66Common::currency($order->shipping) . "\n";
   }
-
+  
   if(!empty($order->coupon) && $order->coupon != 'none') {
-    echo __("Coupon","cart66") . ": " . $order->coupon . "\n";
+    $msg .= __("Coupon","cart66") . ": " . $order->coupon . "\n";
   }
-
+  
   if($order->tax > 0) {
-    echo __("Tax","cart66") . ": " . Cart66Common::currency($order->tax, false) . "\n";
+    $msg .= __("Tax","cart66") . ": " . Cart66Common::currency($order->tax, false) . "\n";
   }
-
-  echo "\n" . __("TOTAL","cart66") . ": " . Cart66Common::currency($order->total, false) . "\n";
-
+  
+  $msg .= "\n" . __("TOTAL","cart66") . ": " . Cart66Common::currency($order->total, false) . "\n";
+  
   if($order->shipping_method != 'None' && $order->shipping_method != 'Download') {
-    echo "\n\n" . __("SHIPPING INFORMATION","cart66") . "\n\n";
-
-    echo $order->ship_first_name . ' ' . $order->ship_last_name . "\n";
-    echo $order->ship_address . "\n";
+    $msg .= "\n\n" . __("SHIPPING INFORMATION","cart66") . "\n\n";
+    
+    $msg .= $order->ship_first_name . ' ' . $order->ship_last_name . "\n";
+    $msg .= $order->ship_address . "\n";
     if(!empty($order->ship_address2)) {
-      echo $order->ship_address2 . "\n";
+      $msg .= $order->ship_address2 . "\n";
     }
-    echo $order->ship_city . ' ' . $order->ship_state . ' ' . $order->ship_zip . "\n" . $order->ship_country . "\n";
-
-    echo "\n" . __("Delivery via","cart66") . ": " . $order->shipping_method . "\n";
+    $msg .= $order->ship_city . ' ' . $order->ship_state . ' ' . $order->ship_zip . "\n" . $order->ship_country . "\n";
+    if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['shipping'])) {
+      foreach($additional_fields['shipping'] as $af) {
+        $msg .= html_entity_decode($af['label']) . ': ' . $af['value'] . "\n";
+      }
+    }
+    $msg .= "\n" . __("Delivery via","cart66") . ": " . $order->shipping_method . "\n";
   }
-
-
-  echo "\n\n" . __("BILLING INFORMATION","cart66") . "\n\n";
-
-  echo $order->bill_first_name . ' ' . $order->bill_last_name . "\n";
-  echo $order->bill_address . "\n";
+  
+  
+  $msg .= "\n\n" . __("BILLING INFORMATION","cart66") . "\n\n";
+  
+  $msg .= $order->bill_first_name . ' ' . $order->bill_last_name . "\n";
+  $msg .= $order->bill_address . "\n";
   if(!empty($order->bill_address2)) {
-    echo $order->bill_address2 . "\n";
+    $msg .= $order->bill_address2 . "\n";
   }
-  echo $order->bill_city . ' ' . $order->bill_state;
-  echo $order->bill_zip != null ? ', ' : ' ';
-  echo $order->bill_zip . "\n" . $order->bill_country . "\n";
-
+  $msg .= $order->bill_city . ' ' . $order->bill_state;
+  $msg .= $order->bill_zip != null ? ', ' : ' ';
+  $msg .= $order->bill_zip . "\n" . $order->bill_country . "\n";
+  if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['billing'])) {
+    foreach($additional_fields['billing'] as $af) {
+      $msg .= html_entity_decode($af['label']) . ': ' . $af['value'] . "\n";
+    }
+  }
   if(!empty($order->phone)) {
     $phone = Cart66Common::formatPhone($order->phone);
-    echo "\n" . __("Phone","cart66") . ": $phone\n";
+    $msg .= "\n" . __("Phone","cart66") . ": $phone\n";
   }
   
   if(!empty($order->email)) {
-    echo __("Email","cart66") . ': ' . $order->email . "\n";
+    $msg .= __("Email","cart66") . ': ' . $order->email . "\n";
   }
-
+  if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['payment'])) {
+    foreach($additional_fields['payment'] as $af) {
+      $msg .= html_entity_decode($af['label']) . ': ' . $af['value'] . "\n";
+    }
+  }
   $receiptPage = get_page_by_path('store/receipt');
   $link = get_permalink($receiptPage->ID);
   if(strstr($link,"?")){
@@ -285,11 +313,12 @@ if($data['type'] == 'html'): ?>
   else{
     $link .= '?ouid=' . $order->ouid;
   }
-
+  
   if($hasDigital) {
-    echo "\n" . __('DOWNLOAD LINK','cart66') . "\n" . __('Click the link below to download your order.','cart66') . "\n$link";
+    $msg .= "\n" . __('DOWNLOAD LINK','cart66') . "\n" . __('Click the link below to download your order.','cart66') . "\n$link";
   }
   else {
-    echo "\n" . __('VIEW RECEIPT ONLINE','cart66') . "\n" . __('Click the link below to view your receipt online.','cart66') . "\n$link";
+    $msg .= "\n" . __('VIEW RECEIPT ONLINE','cart66') . "\n" . __('Click the link below to view your receipt online.','cart66') . "\n$link";
   }
+  echo $msg;
 endif; ?>

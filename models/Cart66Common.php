@@ -1450,7 +1450,7 @@ class Cart66Common {
       }
       elseif($days=floor($totaldelay/86400)) {
         $totaldelay = $totaldelay % 86400;
-        $output = date('m/d/Y', strtotime($datestamp));
+        $output = date(get_option('date_format'), strtotime($datestamp));
       }
       elseif($hours=floor($totaldelay/3600)) {
         $totaldelay = $totaldelay % 3600;
@@ -1477,7 +1477,7 @@ class Cart66Common {
       }
       elseif($days=floor($timeleft/86400)) {
         $timeleft = $timeleft % 86400;
-        $output = date('m/d/Y', strtotime($datestamp));
+        $output = date(get_option('date_format'), strtotime($datestamp));
       }
       elseif($hours=floor($timeleft/3600)) {
         $timeleft = $timeleft % 3600;

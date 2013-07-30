@@ -39,7 +39,7 @@ if(!$test) {
                   </td>
                   <td style="font-weight:normal;font-size: 11px;">
                     <span style="font-weight:bold;"><?php _e('Purchased', 'cart66'); ?></span>
-                    <br><?php echo date('F d, Y', strtotime($order->ordered_on)); ?>
+                    <br><?php echo date(get_option('date_format'), strtotime($order->ordered_on)); ?>
                   </td>
                 </tr>
               </table>
@@ -67,6 +67,11 @@ if(!$test) {
 
                           <?php if(!empty($order->ship_country)): ?>
                             <?php echo $order->ship_country ?><br/>
+                          <?php endif; ?>
+                          <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['shipping'])): ?><br />
+                            <?php foreach($additional_fields['shipping'] as $af): ?>
+                              <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
+                            <?php endforeach; ?>
                           <?php endif; ?>
                         </span>
                         <br/><em><?php _e( 'Delivery via' , 'cart66' ); ?>: <?php echo $order->shipping_method ?></em><br/>
@@ -220,6 +225,11 @@ if(!$test) {
         if(!empty($order->ship_country)) {
           $msg .= $order->ship_country . "\n";
         }
+        if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['shipping'])) {
+          foreach($additional_fields['shipping'] as $af) {
+            $msg .= html_entity_decode($af['label']) . ': ' . $af['value'] . "\n";
+          }
+        }
         $msg .= "\n" . __('Delivery via', 'cart66') . ': ' . $order->shipping_method . "\n\n";
       }
     }
@@ -259,7 +269,7 @@ else {
                   </td>
                   <td style="font-weight:normal;font-size: 11px;">
                     <span style="font-weight:bold;"><?php _e('Purchased', 'cart66'); ?></span>
-                    <br><?php echo date('F d, Y', time()); ?>
+                    <br><?php echo date(get_option('date_format'), time()); ?>
                   </td>
                 </tr>
               </table>

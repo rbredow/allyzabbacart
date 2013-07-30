@@ -88,7 +88,7 @@ if(!$test) {
                   </td>
                   <td style="font-weight:normal;font-size: 11px;">
                     <span style="font-weight:bold;"><?php _e('Purchased', 'cart66'); ?></span>
-                    <br><?php echo date('F d, Y', strtotime($sub->created_at)); ?>
+                    <br><?php echo date(get_option('date_format'), strtotime($sub->created_at)); ?>
                   </td>
                 </tr>
               </table>
@@ -112,7 +112,7 @@ if(!$test) {
                     <br />
                     <?php echo $sub->billing_first_name . ' ' . $sub->billing_last_name; ?>,
                     <br /><br />
-                    <?php _e('This is an email reminder letting you know that your account expires on', 'cart66'); ?> <?php echo date('F d, Y', strtotime($sub->active_until)); ?>.
+                    <?php _e('This is an email reminder letting you know that your account expires on', 'cart66'); ?> <?php echo date(get_option('date_format'), strtotime($sub->active_until)); ?>.
                     <br /><br />
                     <?php _e('Please log-in to your account and renew your subscription', 'cart66'); ?>.
                     <br /><br />
@@ -159,7 +159,7 @@ if(!$test) {
     $reminderId = $data[3];
     $reminder = new Cart66MembershipReminders($reminderId);
     $msg = "Dear $sub->billing_first_name $sub->billing_last_name,\n\n";
-    $msg .= "Your subscription : $sub->subscription_plan_name expires " . date('F d, Y', strtotime($sub->active_until)) . ".\n\n";
+    $msg .= "Your subscription : $sub->subscription_plan_name expires " . date(get_option('date_format'), strtotime($sub->active_until)) . ".\n\n";
     $msg .= "=========================\n\n";
     $msg .= "Please log-in to your account and renew your subscription.\n\n";
     $msg .= "Your login details:\n";
@@ -255,7 +255,7 @@ else {
                   </td>
                   <td style="font-weight:normal;font-size: 11px;">
                     <span style="font-weight:bold;"><?php _e('Purchased', 'cart66'); ?></span>
-                    <br><?php echo date('F d, Y', time()); ?>
+                    <br><?php echo date(get_option('date_format'), time()); ?>
                   </td>
                 </tr>
               </table>
@@ -279,7 +279,7 @@ else {
                     <br />
                     <?php _e('John Doe', 'cart66'); ?>,
                     <br /><br />
-                    <?php _e('This is an email reminder letting you know that your account expires on', 'cart66'); ?> <?php echo date('F d, Y', strtotime('+ 30 days', Cart66Common::localTs())); ?>.
+                    <?php _e('This is an email reminder letting you know that your account expires on', 'cart66'); ?> <?php echo date(get_option('date_format'), strtotime('+ 30 days', Cart66Common::localTs())); ?>.
                     <br /><br />
                     <?php _e('Please login to your account and renew if you want to continue to have access to our site', 'cart66'); ?>.
                     <br /><br />
@@ -326,7 +326,7 @@ else {
     $reminderId = $data[3];
     $reminder = new Cart66MembershipReminders($reminderId);
     $msg = "Dear Test User,\n\n";
-    $msg .= "Your subscription : Default Membership expires " . date('F d, Y', strtotime('+ 30 days', Cart66Common::localTs())) . ".\n\n";
+    $msg .= "Your subscription : Default Membership expires " . date(get_option('date_format'), strtotime('+ 30 days', Cart66Common::localTs())) . ".\n\n";
     $msg .= "=========================\n\n";
     $msg .= "Please log-in to your account and renew your subscription.\n\n";
     $msg .= "Your login details:\n";

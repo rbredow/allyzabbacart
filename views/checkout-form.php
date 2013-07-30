@@ -84,7 +84,7 @@ if(count($errors)) {
           <li><label for="billing-state_text" class="short billing-state_label"><?php _e( 'State' , 'cart66' ); ?>:</label>
             <input type="text" name="billing[state_text]" value="<?php Cart66Common::showValue($b['state']); ?>" id="billing-state_text" class="ajax-tax state_text_field" />
             <select id="billing-state" class="ajax-tax required" title="State billing address" name="billing[state]">
-              <option value="0">&nbsp;</option>
+              <option value="">&nbsp;</option>
               <?php
                 Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Country code on checkout form: $billingCountryCode");
                 $zone = Cart66Common::getZones($billingCountryCode);
@@ -170,7 +170,7 @@ if(count($errors)) {
             <label for="shipping-state_text" class="short shipping-state_label"><?php _e( 'State' , 'cart66' ); ?>:</label>
             <input type="text" name="shipping[state_text]" value="<?php Cart66Common::showValue($s['state']); ?>" id="shipping-state_text" class="ajax-tax state_text_field" />
             <select id="shipping-state" class="ajax-tax shipping_countries required" title="State shipping address" name="shipping[state]">
-              <option value="0">&nbsp;</option>              
+              <option value="">&nbsp;</option>              
               <?php
                 $zone = Cart66Common::getZones($shippingCountryCode);
                 foreach($zone as $code => $name) {
@@ -328,6 +328,7 @@ if(count($errors)) {
                 echo '</ul>';
               ?>
             </li>
+            </ul>
           <?php endif; ?>
           
           <?php if(Cart66Setting::getValue('mailchimp_list_ids') && Cart66Setting::getValue('mailchimp_apikey')): ?>
@@ -369,6 +370,7 @@ if(count($errors)) {
                 }
               ?>
             </li>
+            </ul>
           <?php endif; ?>
 
           <?php if(Cart66Setting::getValue('sendy_url') && Cart66Setting::getValue('sendy_id')): ?>
@@ -389,7 +391,6 @@ if(count($errors)) {
             </li>
           <?php endif; ?>
       	</ul>
-
 			
 			<?php if(!Cart66Common::isLoggedIn()): ?>
         <?php if(Cart66Session::get('Cart66Cart')->hasSubscriptionProducts() || Cart66Session::get('Cart66Cart')->hasMembershipProducts()): ?>
