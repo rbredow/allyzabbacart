@@ -279,7 +279,7 @@ class Cart66CartItem {
       $price = $product->setup_fee;
     }
     else {
-      $price = $product->price + $this->_priceDifference;
+      $price = $product->getMembershipPrice() + $this->_priceDifference;
     }
     
     if(CART66_PRO && !empty($product->gravity_form_id) && $product->gravity_form_pricing == 1){
