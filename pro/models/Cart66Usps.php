@@ -96,8 +96,6 @@ class Cart66Usps {
           $rate = (float)$service->Rate;
           $name = str_replace('&lt;sup&gt;&#174;&lt;/sup&gt;', '', $name);
           $name = str_replace('&lt;sup&gt;&#8482;&lt;/sup&gt;', '', $name);
-          $name = trim(str_replace(' 1-Day', '', $name));
-          $name = trim(str_replace(' 2-Day', '', $name));
           $this->addRate($name, $rate);
         }
       }
@@ -125,8 +123,6 @@ class Cart66Usps {
           $rate = (float)$service->Postage;
           $name = str_replace('&lt;sup&gt;&#174;&lt;/sup&gt;', '', $name);
           $name = str_replace('&lt;sup&gt;&#8482;&lt;/sup&gt;', '', $name);
-          $name = trim(str_replace(' 1-Day', '', $name));
-          $name = trim(str_replace(' 2-Day', '', $name));
           $name = str_replace('*', '', $name);
           $this->addRate($name, $rate);
           Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] USPS: Adding international rate ===> $name -- $rate");

@@ -14,7 +14,8 @@ class Cart66AuPost {
   public function getRate($PostalCode, $dest_zip, $dest_country_code, $service, $weight, $length=5, $width=5, $height=5) {
     $weight = $weight / 2.2; // Convert to Kilograms for accurate pricing
     $setting= new Cart66Setting();
-    $countryCode = array_shift(explode('~', Cart66Setting::getValue('home_country')));
+    $home_country = explode('~', Cart66Setting::getValue('home_country'));
+    $countryCode = array_shift($home_country);
     
     if ($this->credentials != 1) {
       print 'Please set your credentials with the setCredentials function';

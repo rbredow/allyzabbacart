@@ -150,7 +150,7 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
     }
   }
   
-  public function saveOrder($order_number) {
+  public function saveMijirehOrder($order_number) {
     global $wpdb;
     
     // Make sure the order is not already in the database
@@ -186,13 +186,16 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
         if(isset($cloud_order['meta_data'][$key]['gforms_' . $item['sku']])){
           $data['form_entry_ids'] = $cloud_order['meta_data'][$key]['gforms_' . $item['sku']];
         }
-        $fIds = explode(',', $data['form_entry_ids']);
-        if(is_array($fIds) && count($fIds)) {
-          foreach($fIds as $entryId) {
-            if(class_exists('RGFormsModel')) {
-              if($lead = RGFormsModel::get_lead($entryId)) {
-                $lead['status'] = 'active';
-                RGFormsModel::update_lead($lead);
+        $fIds = array();
+        if(isset($data['form_entry_ids'])) {
+          $fIds = explode(',', $data['form_entry_ids']);
+          if(is_array($fIds) && count($fIds)) {
+            foreach($fIds as $entryId) {
+              if(class_exists('RGFormsModel')) {
+                if($lead = RGFormsModel::get_lead($entryId)) {
+                  $lead['status'] = 'active';
+                  RGFormsModel::update_lead($lead);
+                }
               }
             }
           }

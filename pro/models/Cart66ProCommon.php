@@ -16,7 +16,11 @@ class Cart66ProCommon {
   
   public static function getUpdatePluginsOption($option) {
     $pluginName = "cart66/cart66.php";
-    $versionInfo = Cart66ProCommon::getVersionInfo();
+    $versionInfo = get_transient('_cart66_version_request');
+    if(!$versionInfo) {
+      $versionInfo = Cart66ProCommon::getVersionInfo();
+      set_transient('_cart66_version_request', $versionInfo, 43200);
+    }
     if(is_array($versionInfo)) {
 
       $cart66Option = isset($option->response[$pluginName]) ? $option->response[$pluginName] : '';
@@ -62,8 +66,11 @@ class Cart66ProCommon {
       $raw = wp_remote_request($callBackLink, $options);
       Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Version info from remote request: " . print_r($raw, 1));
       if (!is_wp_error($raw) && 200 == $raw['response']['code']) {
-        $info = explode("~", $raw['body']);
-        $versionInfo = array("isValidKey" => $info[0], "version" => $info[1], "url" => $info[2]);
+        $body = $raw['body'];
+        if(strncmp('1~', $body, 2) === 0) {
+          $info = explode("~", $raw['body']);
+          $versionInfo = array("isValidKey" => $info[0], "version" => $info[1], "url" => $info[2]);
+        }
       }
     }
     return $versionInfo;      
@@ -102,7 +109,7 @@ class Cart66ProCommon {
       $orderNumber = Cart66Setting::getValue('order_number');
 
       if($orderNumber) {
-        $url = 'http://cart66.com/latest-cart66/';
+        $url = 'http://cart66.com/pro/change-log/';
         $ch = curl_init();
         $timeout = 5;
         curl_setopt($ch,CURLOPT_URL,$url);
@@ -184,13 +191,23 @@ class Cart66ProCommon {
   public static function getUspsServices() {
     $usaServices = array(
       'USPS First-Class Mail' => 'First-Class Mail Parcel',
-      'USPS Priority Mail Express' => 'Priority Mail Express',
-      'USPS Priority Mail' => 'Priority Mail',
-      'USPS Parcel Post' => 'Standard Post',
+      'USPS Priority Mail Express 1-Day' => 'Priority Mail Express 1-Day',
+      'USPS Priority Mail Express 2-Day' => 'Priority Mail Express 2-Day',
+      'USPS Priority Mail Express 3-Day' => 'Priority Mail Express 3-Day',
+      'USPS Priority Mail Express Military' => 'Priority Mail Express Military',
+      'USPS Priority Mail 1-Day' => 'Priority Mail 1-Day',
+      'USPS Priority Mail 2-Day' => 'Priority Mail 2-Day',
+      'USPS Priority Mail 3-Day' => 'Priority Mail 3-Day',
+      'USPS Priority Mail Military' => 'Priority Mail Military',
+      'USPS Standard Post' => 'Standard Post',
       'USPS Media Mail' => 'Media Mail',
+      'USPS Library Mail' => 'Library Mail',
       'USPS Priority Mail Express International' => 'Priority Mail Express International',
       'USPS Priority Mail International' => 'Priority Mail International',
-      'USPS First-Class Mail International' => 'First-Class Package International Service'
+      'USPS First-Class Mail International' => 'First-Class Package International Service',
+      'USPS Priority Mail Small Flat Rate Box' => 'Priority Mail International Small Flat Rate Box',
+      'USPS Priority Mail Medium Flat Rate Box' => 'Priority Mail International Medium Flat Rate Box',
+      'USPS Priority Mail Large Flat Rate Box' => 'Priority Mail International Large Flat Rate Box'
     );
     
     return $usaServices;

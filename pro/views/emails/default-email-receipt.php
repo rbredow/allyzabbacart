@@ -128,6 +128,22 @@ if(!$test) {
                     </td>
                   </tr>
                 <?php endif; ?>
+                <?php if(isset($order->custom_field) && $order->custom_field != ''): ?>
+                  <tr>
+                    <td bgcolor="#f9f9f9" style="font-family: Arial, Verdana, sans-serif; padding: 10px 25px 0px 15px; font-size: 12px; color:#333;text-align:left;vertical-align:top;" colspan="2">
+                      <?php if(Cart66Setting::getValue('checkout_custom_field_label')): ?>
+                        <strong><?php echo Cart66Setting::getValue('checkout_custom_field_label'); ?></strong>
+                      <?php else: ?>
+                        <strong><?php _e('Enter any special instructions you have for this order:', 'cart66'); ?></strong>
+                      <?php endif; ?>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#f9f9f9" style="font-family: Arial, Verdana, sans-serif; padding: 10px 25px 0px 15px; font-size: 12px; color:#333;text-align:left;vertical-align:top;" colspan="2">
+                      <?php echo $order->custom_field; ?>
+                    </td>
+                  </tr>
+                <?php endif; ?>
                 <tr>
                   <td bgcolor="#f9f9f9" width="562" height="13">
                   </td>
@@ -396,6 +412,17 @@ if(!$test) {
         $msg .= html_entity_decode($af['label']) . ': ' . $af['value'] . "\n";
       }
     }
+    
+    if(isset($order->custom_field) && $order->custom_field != '') {
+      if(Cart66Setting::getValue('checkout_custom_field_label')) {
+        $msg .= "\n" . Cart66Setting::getValue('checkout_custom_field_label');
+      }
+      else {
+        $msg .= "\n" . __('Enter any special instructions you have for this order:', 'cart66');
+      }
+      $msg .= "\n" . $order->custom_field . "\n";
+    }
+    
     $receiptPage = get_page_by_path('store/receipt');
     $link = get_permalink($receiptPage->ID);
     if(strstr($link,"?")){

@@ -26,7 +26,7 @@ Class Cart66DataTables {
     return $result;
   }
   
-  public function productsSearch() {
+  public static function productsSearch() {
     $where = "";
   	if(isset($_GET['sSearch']) && $_GET['sSearch'] != ""){
   		$where = $_GET['sSearch'];
@@ -500,7 +500,7 @@ Class Cart66DataTables {
   	die();
   }
   
-  public function gfData() {
+  public static function gfData() {
     global $wpdb;
     $gfTitles = array();
     if(CART66_PRO && class_exists('RGFormsModel')) {
@@ -515,7 +515,7 @@ Class Cart66DataTables {
     return $gfTitles;
   }
   
-  public function totalRows($indexColumn, $tableName, $where=null) {
+  public static function totalRows($indexColumn, $tableName, $where=null) {
     global $wpdb;
     $sql = "
     	SELECT COUNT(" . $indexColumn . ")
@@ -526,7 +526,7 @@ Class Cart66DataTables {
     return $sql[0];
   }
   
-  public function filteredRows($indexColumn, $tableName, $where) {
+  public static function filteredRows($indexColumn, $tableName, $where) {
     global $wpdb;
     $sqlTotal = "
       SELECT COUNT(" . $indexColumn . ")
@@ -537,7 +537,7 @@ Class Cart66DataTables {
     return $sqlTotal;
   }
   
-  public function dataTablesWhere($columns) {
+  public static function dataTablesWhere($columns) {
     $where = "";
   	if($_GET['sSearch'] != ""){
   		$where = "WHERE (";
@@ -561,7 +561,7 @@ Class Cart66DataTables {
     return $where;
   }
   
-  public function dataTablesLimit() {
+  public static function dataTablesLimit() {
     $limit = "";
   	if(isset($_GET['iDisplayStart']) && $_GET['iDisplayLength'] != '-1'){
   		$limit = mysql_real_escape_string($_GET['iDisplayStart']) . ", " . mysql_real_escape_string($_GET['iDisplayLength']);
@@ -569,7 +569,7 @@ Class Cart66DataTables {
     return $limit;
   }
   
-  public function dataTablesOrder($columns) {
+  public static function dataTablesOrder($columns) {
     if(isset($_GET['iSortCol_0'])){
   		$order = "ORDER BY  ";
   		for($i=0; $i<intval($_GET['iSortingCols']); $i++){

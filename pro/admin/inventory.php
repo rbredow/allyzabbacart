@@ -56,9 +56,9 @@
           "bAutoWidth": false,
   				"sAjaxSource": ajaxurl + "?action=inventory_table",
   				"aoColumns": [
-            { "bSortable": false, "fnRender": function(oObj) { return oObj.aData[0] === false ? '<input type="hidden" name="track_' + oObj.aData[4] + '"/><input type="checkbox" name="track_' + oObj.aData[4] + '" value="1" id="track_' + oObj.aData[4] + '" class="Cart66InventoryCheckbox" />' : '<input type="hidden" name="track_' + oObj.aData[4] + '" value="" /><input type="checkbox" name="track_' + oObj.aData[4] + '" value="1" id="track_' + oObj.aData[4] + '" class="Cart66InventoryCheckbox" checked="checked" />' }}, 
+            { "bSortable": false, "fnRender": function(oObj) { return oObj.aData[0] === false ? '<input type="hidden" name="track_' + oObj.aData[5] + '"/><input type="checkbox" name="track_' + oObj.aData[5] + '" value="1" id="track_' + oObj.aData[5] + '" class="Cart66InventoryCheckbox" />' : '<input type="hidden" name="track_' + oObj.aData[5] + '" value="" /><input type="checkbox" name="track_' + oObj.aData[5] + '" value="1" id="track_' + oObj.aData[5] + '" class="Cart66InventoryCheckbox" checked="checked" />' }}, 
             {"bSortable": false }, {"bSortable": false }, {"bSortable": false },
-            { "bSortable": false, "fnRender": function(oObj) { return '<input type="text" name="qty_' + oObj.aData[4] + '" value="' + oObj.aData[3] + '" id="qty_' + oObj.aData[4] + '" style="width:50px;" class="Cart66InventoryQty" />' }}
+            { "bSortable": false, "fnRender": function(oObj) { return '<input type="text" name="qty_' + oObj.aData[5] + '" value="' + oObj.aData[4] + '" id="qty_' + oObj.aData[5] + '" style="width:50px;" class="Cart66InventoryQty" />' }}
           ],
           "oLanguage": { 
             "sZeroRecords": "<?php _e('No matching Inventory Items found', 'cart66'); ?>", 

@@ -160,6 +160,17 @@ class Cart66Notifications {
         $msg .= html_entity_decode($af['label']) . ': ' . $af['value'] . "\n";
       }
     }
+    
+    if(isset($order->custom_field) && $order->custom_field != '') {
+      if(Cart66Setting::getValue('checkout_custom_field_label')) {
+        $msg .= "\n" . Cart66Setting::getValue('checkout_custom_field_label');
+      }
+      else {
+        $msg .= "\n" . __('Enter any special instructions you have for this order:', 'cart66');
+      }
+      $msg .= "\n" . $order->custom_field . "\n";
+    }
+    
     $receiptPage = get_page_by_path('store/receipt');
     $link = get_permalink($receiptPage->ID);
     if(strstr($link,"?")){
