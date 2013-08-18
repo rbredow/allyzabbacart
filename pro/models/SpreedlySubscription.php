@@ -12,14 +12,14 @@ class SpreedlySubscription extends SpreedlyXmlObject {
   protected static $_subscriptionPlans;
   
   public function __construct($id=null) {
-    $this->_subscriptionPlans = array();
+    self::$_subscriptionPlans = array();
     if(isset($id) && is_numeric($id)) {
       $this->load($id);
     }
   }
   
   public function loadPlans() {
-    $this->_subscriptionPlans = self::getSubscriptions();
+    self::$_subscriptionPlans = self::getSubscriptions();
   }
   
   public function load($id) {
@@ -28,7 +28,7 @@ class SpreedlySubscription extends SpreedlyXmlObject {
       $this->loadPlans();
     }
     
-    foreach($this->_subscriptionPlans as $plan) {
+    foreach(self::$_subscriptionPlans as $plan) {
       if($plan->id == $id) {
         $this->setData($plan->getData());
       }

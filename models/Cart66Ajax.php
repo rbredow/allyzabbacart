@@ -168,7 +168,7 @@ class Cart66Ajax {
     die();
   }
   
-  public function loadAjaxGateway($gateway) {
+  public static function loadAjaxGateway($gateway) {
     switch($gateway) {
       case 'Cart66ManualGateway':
         require_once(CART66_PATH . "/gateways/$gateway.php");
@@ -375,7 +375,7 @@ class Cart66Ajax {
     die();
   }
   
-  public function checkInventoryOnAddToCart() {
+  public static function checkInventoryOnAddToCart() {
     $result = array(true);
     $itemId = Cart66Common::postVal('cart66ItemId');
     $options = '';

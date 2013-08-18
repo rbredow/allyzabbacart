@@ -31,7 +31,8 @@ class Cart66FedEx {
   
   public function getRate($PostalCode, $dest_zip, $dest_country_code, $service, $weight, $length=0, $width=0, $height=0) {
     $setting= new Cart66Setting();
-    $countryCode = array_shift(explode('~', Cart66Setting::getValue('home_country')));
+    $home_country = explode('~', Cart66Setting::getValue('home_country'));
+    $countryCode = array_shift($home_country);
     $pickupCode = (Cart66Setting::getValue('fedex_pickup_code')) ? Cart66Setting::getValue('fedex_pickup_code') : "REGULAR_PICKUP";
     $residential = (Cart66Setting::getValue('fedex_only_ship_commercial')) ? "0" : "1";
     $locationType = (Cart66Setting::getValue('fedex_location_type') == 'commercial') ? "0" : "1";

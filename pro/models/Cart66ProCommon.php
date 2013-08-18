@@ -191,13 +191,23 @@ class Cart66ProCommon {
   public static function getUspsServices() {
     $usaServices = array(
       'USPS First-Class Mail' => 'First-Class Mail Parcel',
-      'USPS Priority Mail Express' => 'Priority Mail Express',
-      'USPS Priority Mail' => 'Priority Mail',
-      'USPS Parcel Post' => 'Standard Post',
+      'USPS Priority Mail Express 1-Day' => 'Priority Mail Express 1-Day',
+      'USPS Priority Mail Express 2-Day' => 'Priority Mail Express 2-Day',
+      'USPS Priority Mail Express 3-Day' => 'Priority Mail Express 3-Day',
+      'USPS Priority Mail Express Military' => 'Priority Mail Express Military',
+      'USPS Priority Mail 1-Day' => 'Priority Mail 1-Day',
+      'USPS Priority Mail 2-Day' => 'Priority Mail 2-Day',
+      'USPS Priority Mail 3-Day' => 'Priority Mail 3-Day',
+      'USPS Priority Mail Military' => 'Priority Mail Military',
+      'USPS Standard Post' => 'Standard Post',
       'USPS Media Mail' => 'Media Mail',
+      'USPS Library Mail' => 'Library Mail',
       'USPS Priority Mail Express International' => 'Priority Mail Express International',
       'USPS Priority Mail International' => 'Priority Mail International',
-      'USPS First-Class Mail International' => 'First-Class Package International Service'
+      'USPS First-Class Mail International' => 'First-Class Package International Service',
+      'USPS Priority Mail Small Flat Rate Box' => 'Priority Mail International Small Flat Rate Box',
+      'USPS Priority Mail Medium Flat Rate Box' => 'Priority Mail International Medium Flat Rate Box',
+      'USPS Priority Mail Large Flat Rate Box' => 'Priority Mail International Large Flat Rate Box'
     );
     
     return $usaServices;

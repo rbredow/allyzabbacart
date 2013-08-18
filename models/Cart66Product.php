@@ -31,7 +31,7 @@ class Cart66Product extends Cart66ModelAbstract {
   }
   
   public function loadByItemNumber($itemNumber) {
-    $itemNumber = $this->_db->escape($itemNumber);
+    $itemNumber = esc_sql($itemNumber);
     $sql = "SELECT id from $this->_tableName where item_number = '$itemNumber'";
     $id = $this->_db->get_var($sql);
     $this->load($id);

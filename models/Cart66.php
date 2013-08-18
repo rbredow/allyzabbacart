@@ -241,7 +241,7 @@ class Cart66 {
       require_once(CART66_PATH . "/gateways/Cart66Mijireh.php");
       $order_number = Cart66Common::getVal('order_number');
       $mijireh = new Cart66Mijireh();
-      $mijireh->saveOrder($order_number);
+      $mijireh->saveMijirehOrder($order_number);
     }
     elseif(isset($_GET['task']) && Cart66Common::getVal('task') == 'mijireh_page_slurp') {
       $access_key = Cart66Setting::getValue('mijireh_access_key');
@@ -272,7 +272,7 @@ class Cart66 {
       $key = strtoupper(md5($string));
       if($key == $_REQUEST['key']) {
         $tco = new Cart662Checkout();
-        $tco->saveOrder();
+        $tco->saveTcoOrder();
       }
     }
   }

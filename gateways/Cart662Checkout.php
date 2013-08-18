@@ -203,7 +203,7 @@ class Cart662Checkout extends Cart66GatewayAbstract {
     return $orderId;
   }
   
-  public function saveOrder() {
+  public function saveTcoOrder() {
     global $wpdb;
     // NEW Parse custom value
     $referrer = false;
