@@ -876,7 +876,7 @@ class Cart66Common {
     $ca['NU'] = 'Nunavut';
     $ca['ON'] = 'Ontario';
     $ca['PE'] = 'Prince Edward Island';
-    $ca['PQ'] = 'Quebec';
+    $ca['QC'] = 'Quebec';
     $ca['SK'] = 'Saskatchewan';
     $ca['YT'] = 'Yukon Territory';
     $zones['CA'] = $ca;

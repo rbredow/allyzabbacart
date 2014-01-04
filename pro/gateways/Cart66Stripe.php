@@ -67,6 +67,8 @@ class Cart66Stripe extends Cart66GatewayAbstract {
     $gatewayUrl = Cart66Setting::getValue('auth_url');
     $this->gateway_url = $gatewayUrl;
     
+    $b['address2'] = ($b['address2'] == "") ? null : $b['address2'];
+    
     $cardData = array(
       'number' => $p['cardNumber'], 
       'exp_month' => $p['cardExpirationMonth'], 
