@@ -7,10 +7,12 @@ $tab = 'integrations-amazon_s3';
     <!--li><a href="#integrations-main_settings" class="integrations-main_settings"><?php _e('Integrations', 'cart66'); ?></a> | </li-->
     <li><a href="#integrations-amazon_s3" class="integrations-amazon_s3"><?php _e('Amazon S3', 'cart66'); ?></a> | </li>
     <li><a href="#integrations-constant_contact" class="integrations-constant_contact"><?php _e('Constant Contact', 'cart66'); ?></a> | </li>
+    <li><a href="#integrations-endicia" class="integrations-endicia"><?php _e('Endicia', 'cart66'); ?></a> | </li>
     <li><a href="#integrations-google_analytics_ecommerce" class="integrations-google_analytics_ecommerce"><?php _e('Google Analytics Ecommerce Tracking', 'cart66'); ?></a> | </li>
     <li><a href="#integrations-gravity_forms" class="integrations-gravity_forms"><?php _e('Gravity Forms', 'cart66'); ?></a> | </li>
     <li><a href="#integrations-idevaffiliate" class="integrations-idevaffiliate"><?php _e('iDevAffiliate', 'cart66'); ?></a> | </li>
     <li><a href="#integrations-mailchimp" class="integrations-mailchimp"><?php _e('MailChimp', 'cart66'); ?></a> | </li>
+    <li><a href="#integrations-sendy" class="integrations-sendy"><?php _e('Sendy', 'cart66'); ?></a> | </li>
     <li><a href="#integrations-spreedly" class="integrations-spreedly"><?php _e('Spreedly', 'cart66'); ?></a> | </li>
     <li><a href="#integrations-zendesk" class="integrations-zendesk"><?php _e('Zendesk', 'cart66'); ?></a></li>
   </ul>
@@ -246,6 +248,53 @@ $tab = 'integrations-amazon_s3';
         <p class="description"><?php _e( 'This feature is only available in', 'cart66'); ?> <a href="http://cart66.com"><?php _e('Cart66 Professional', 'cart66'); ?></a>.</p>
       <?php endif; ?>
     </div>
+
+    <div id="integrations-endicia" class="pane">
+      <h3><?php _e('Endicia', 'cart66'); ?></h3>
+      <p class="description"><?php _e( 'Add a button to the order page to ship with Endicia without retyping addresses. (Mac Endicia only)' , 'cart66' ); ?></p>
+      <table class="form-table">
+        <tbody>
+            <tr valign="top">
+              <th scope="row"><?php _e('Enable Endicia', 'cart66'); ?></th>
+              <td>
+                <input type="radio" name="enable_endicia" id="enable_endicia_yes" value="1" <?php echo (Cart66Setting::getValue('enable_endicia') == 1) ? 'checked="checked" ' : ''; ?>/>
+                <label for="enable_endicia_yes"><?php _e('Yes', 'cart66'); ?></label>
+                <input type="radio" name="enable_endicia" id="enable_endicia_no" value="" <?php echo (Cart66Setting::getValue('enable_endicia') != 1) ? 'checked="checked" ' : ''; ?>/>
+                <label for="enable_endicia_no"><?php _e('No', 'cart66'); ?></label>
+              </td>
+            </tr>
+          <tr valign="top">
+            <th scope="row"><?php _e('Product Country of Origin', 'cart66'); ?></th>
+            <td>
+              <input type="text" name="endicia_countryOfOrigin" id="endicia_countryOfOrigin" class="regular-text" value="<?php echo Cart66Setting::getValue('endicia_countryOfOrigin'); ?>" />
+              <p class="description"><?php _e( 'For customs purposes, the country of origin for all the items in your store (ie: United States).' , 'cart66' ); ?></p>
+            </td>
+          </tr>
+
+          <tr valign="top">
+            <th scope="row"><?php _e('Product Description', 'cart66'); ?></th>
+            <td>
+              <input type="text" name="endicia_productDescription" id="endicia_productDescription" class="regular-text" value="<?php echo Cart66Setting::getValue('endicia_productDescription'); ?>" />
+              <p class="description"><?php _e( 'For international customs purposes, the generic description of your products.' , 'cart66' ); ?></p>
+            </td>
+          </tr>
+
+            <tr valign="top">
+              <th scope="row"><?php _e('Use Generic Product Descriptions Only for Customs forms', 'cart66'); ?></th>
+              <td>
+                <input type="radio" name="enable_endiciaGenericProducts" id="enable_endiciaGenericProducts_yes" value="1" <?php echo (Cart66Setting::getValue('enable_endiciaGenericProducts') == 1) ? 'checked="checked" ' : ''; ?>/>
+                <label for="enable_endiciaGenericProducts_yes"><?php _e('Yes', 'cart66'); ?></label>
+                <input type="radio" name="enable_endiciaGenericProducts" id="enable_endiciaGenericProducts_no" value="" <?php echo (Cart66Setting::getValue('enable_endiciaGenericProducts') != 1) ? 'checked="checked" ' : ''; ?>/>
+                <label for="enable_endiciaGenericProducts_no"><?php _e('No', 'cart66'); ?></label>
+                <p class="description"><?php _e( 'If your international customers tend to order more than 5 unique products, this prevents them from overflowing Endicia\'s custom form.' , 'cart66' ); ?></p>
+              </td>
+            </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+
     <div id="integrations-mailchimp" class="pane">
       <a href="http://eepurl.com/dtQBb" target="_blank" style="float:right;"><img src="https://cart66.com/images/integrations/MC_MonkeyReward_06.png" align="left" alt="Powered by MailChimp"></a>
       <h3><?php _e('MailChimp', 'cart66'); ?></h3>
@@ -318,6 +367,44 @@ $tab = 'integrations-amazon_s3';
         <p class="description"><?php _e( 'This feature is only available in', 'cart66'); ?> <a href="http://cart66.com"><?php _e('Cart66 Professional', 'cart66'); ?></a>.</p>
       <?php endif; ?>
     </div>
+
+    <div id="integrations-sendy" class="pane">
+      <a href="http://sendy.co/?ref=MikAM" target="_blank" style="float:right;"><img src="http://static.sendy.co/125x125_var1.jpg" alt="Check out Sendy, a self hosted newsletter web app that lets you send emails 100x cheaper via Amazon SES." align="left" ></a>
+      <h3><?php _e('Sendy', 'cart66'); ?></h3>
+      <?php if(CART66_PRO): ?>
+        <p class="description"><?php _e( 'Configure your', 'cart66'); ?> <a href="http://sendy.co/?ref=MikAM" target="_blank">Sendy</a> <?php _e('account information so your buyers can opt in to your newsletter', 'cart66'); ?></p>
+        <table class="form-table">
+          <tbody>
+            <tr valign="top">
+              <th scope="row"><?php _e('Sendy URL', 'cart66'); ?></th>
+              <td>
+                <input type="text" name="sendy_url" id="sendy_url" value="<?php echo Cart66Setting::getValue('sendy_url'); ?>" class="regular-text" />
+                <p class="description"><?php _e( 'This is your base URL for your sendy install, it could be something like <i>http://mysite.com/sendy</i>. No trailing slash.', 'cart66')?></p>
+              </td>
+            </tr>
+            <tr valign="top">
+              <th scope="row"><?php _e('Sendy List ID', 'cart66'); ?></th>
+              <td>
+                <input type="text" name="sendy_id" id="sendy_id" value="<?php echo Cart66Setting::getValue('sendy_id'); ?>" class="regular-text" />
+                <p class="description"><?php _e( 'Which list ID do you offer your purchasers to subscribe?', 'cart66')?></p>
+              </td>
+            </tr>
+            <tr valign="top">
+              <th scope="row"><?php _e('Sendy Message', 'cart66'); ?></th>
+              <td>
+                <input type="text" name="sendy_message" id="sendy_message" value="<?php echo Cart66Setting::getValue('sendy_message'); ?>" class="regular-text" />
+                <p class="description"><?php _e( 'What message to show in the cart during check to ask about subscribing?', 'cart66')?></p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      <?php else: ?>
+        <p class="description"><?php _e('Helps you distribute newsletters with your own server and Amazon SES.','cart66') ?> <a href="http://sendy.co/?ref=MikAM" target="_blank" style="float:right;"><img src="http://static.sendy.co/125x125_var1.jpg" alt="Check out Sendy, a self hosted newsletter web app that lets you send emails 100x cheaper via Amazon SES." align="left" ></a></p>
+        <p class="description"><?php _e( 'This feature is only available in', 'cart66'); ?> <a href="http://cart66.com"><?php _e('Cart66 Professional', 'cart66'); ?></a>.</p>
+      <?php endif; ?>
+    </div>
+
+
     <div id="integrations-idevaffiliate" class="pane">
       <a href="#" target="_blank" style="float:right;"><img src="https://cart66.com/images/integrations/idev_logo.png" align="left" alt="iDevAffiliate"></a>
       <h3><?php _e('iDevAffiliate', 'cart66'); ?></h3>

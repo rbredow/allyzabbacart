@@ -12,7 +12,7 @@ class Cart66Notifications {
    */
   public static function mail($to, $subject, $msg, $headers=null) {
     //Disable mail headers if the WP Mail SMTP plugin is in use.
-    //if(function_exists('wp_mail_smtp_activate')) { $headers = null; }
+    if(function_exists('wp_mail_smtp_activate')) { $headers = null; }
     return wp_mail($to, $subject, $msg, $headers);
   }
   

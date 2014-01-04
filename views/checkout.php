@@ -217,6 +217,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
         
         // Look for mailchimp opt-in
         if(CART66_PRO) { include(CART66_PATH . "/pro/Cart66MailChimpOptIn.php"); }
+
+        // Look for sendy opt-in
+        if(CART66_PRO) { include(CART66_PATH . "/pro/Cart66SendyOptIn.php"); }
         
         $gatewayName = get_class($gateway);
         $gateway->initCheckout($oneTimeTotal);

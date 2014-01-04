@@ -1048,7 +1048,12 @@ class Cart66ShortcodeManager {
         'ouid',
         'shipping_method',
         'account_id',
-        'tracking_number'
+        'tracking_number',
+        'feature_level',
+        'subscription_plan_name',
+        'active_until',
+        'billing_interval',
+        'username'
       );
       if(in_array($attrs['att'], $data)) {
         switch ($attrs['att']) {
@@ -1102,6 +1107,26 @@ class Cart66ShortcodeManager {
               $link .= '?ouid=';
             }
             $output = $link . $order->ouid;
+            break;
+          case 'feature_level': // Intentionally falling through
+          case 'active_until':
+          case 'subscription_plan_name':
+          case 'active_until':
+          case 'active_until':
+          case 'billing_interval':
+            if ($order->account_id) {
+              $sub = new Cart66AccountSubscription($order->account_id);
+              $output = $sub->$attrs['att'];
+            } else $output = "None";
+            break;
+          case 'username': 
+            if ($order->account_id) {
+              $sub = new Cart66AccountSubscription($order->account_id);
+              $account = new Cart66Account();
+              $account->load($sub->account_id);
+              //Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Loaded account: " . print_r($account, true) );
+              $output = $account->$attrs['att'];
+            } else $output = "None";
             break;
           default:
             $output = $order->$attrs['att'];

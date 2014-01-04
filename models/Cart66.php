@@ -481,6 +481,7 @@ class Cart66 {
     require_once(CART66_PATH . "/gateways/Cart662Checkout.php");
     require_once(CART66_PATH . "/models/Cart66Updater.php");
     require_once(CART66_PATH . "/models/Cart66Notifications.php");
+    require_once(CART66_PATH . "/models/Cart66Endicia.php");
     
     if(CART66_PRO) {
       require_once(CART66_PATH . "/pro/models/Cart66AccessManager.php");
@@ -498,6 +499,7 @@ class Cart66 {
       require_once(CART66_PATH . "/pro/models/Cart66AuPost.php");
       require_once(CART66_PATH . "/pro/models/Cart66CaPost.php");
       require_once(CART66_PATH . "/pro/models/Cart66MailChimp.php");
+      require_once(CART66_PATH . "/pro/models/Cart66MailSendy.php");
       require_once(CART66_PATH . "/pro/models/Cart66AdvancedNotifications.php");
       require_once(CART66_PATH . "/pro/models/Cart66OrderFulfillment.php");
       require_once(CART66_PATH . "/pro/models/Cart66EmailLog.php");

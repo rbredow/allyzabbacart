@@ -741,6 +741,11 @@ class Cart66Cart {
     $pre_string = isset($orderInfo['status']) && $orderInfo['status'] == 'checkout_pending' ? 'CP-' : 'MT-';
     $orderInfo['trans_id'] = (empty($orderInfo['trans_id'])) ? $pre_string . Cart66Common::getRandString() : $orderInfo['trans_id'];
     $orderInfo['ip'] = $_SERVER['REMOTE_ADDR'];
+    // Is the user logged in, if so, let's store their account ID in the order
+    if(Cart66Common::isLoggedIn()) {
+      $account = new Cart66Account();
+      $orderInfo['account_id'] = Cart66Session::get('Cart66AccountId');
+    }
     if(Cart66Session::get('Cart66Promotion')){
        $orderInfo['discount_amount'] = Cart66Session::get('Cart66Promotion')->getDiscountAmount(Cart66Session::get('Cart66Cart'));
     }

@@ -45,6 +45,10 @@ ajaxManager.run();
       $(this).attr('disabled', 'disabled');
     })
     $('.Cart66AjaxWarning').hide();
+    // Added to remove error on double-click when add to cart is clicked
+    $('.purAddToCart, .purAddToCartImage').click(function() {
+        $(this).attr('disabled', 'disabled');
+    })
     $('.ajax-button').click(function() {
       $(this).attr('disabled', true);
       var id = $(this).attr('id').replace('addToCart_', '');
