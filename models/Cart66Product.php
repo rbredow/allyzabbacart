@@ -776,7 +776,7 @@ class Cart66Product extends Cart66ModelAbstract {
     $errors = array();
     
     if(!$override_nonce && !wp_verify_nonce($_POST['cart66_product_nonce'], 'cart66_product_nonce')) {
-      $errors['nonce'] = __("An unkown error occured, please try again later","cart66");
+      $errors['nonce'] = __("An unknown error occurred, please try again later","cart66");
     }
     else {
       // Verify that the item number is present
