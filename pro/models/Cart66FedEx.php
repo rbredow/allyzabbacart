@@ -42,163 +42,105 @@ class Cart66FedEx {
       die();
     }
     
-    // Rate Request
-    $data = '<?xml version="1.0" encoding="UTF-8" ?>';
-    $data .='<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v10="http://fedex.com/ws/rate/v10">';
-    $data .='  <soapenv:Header/>';
-    $data .='  <soapenv:Body>';
-    $data .='    <v10:RateRequest>';
-    $data .='      <v10:WebAuthenticationDetail>';
-    $data .='        <v10:UserCredential>';
-    $data .='          <v10:Key>' . $this->developerKey . '</v10:Key>';
-    $data .='          <v10:Password>' . $this->password . '</v10:Password>';
-    $data .='        </v10:UserCredential>';
-    $data .='      </v10:WebAuthenticationDetail>';
-    $data .='      <v10:ClientDetail>';
-    $data .='        <v10:AccountNumber>' . $this->accountNumber . '</v10:AccountNumber>';
-    $data .='        <v10:MeterNumber>' . $this->meterNumber . '</v10:MeterNumber>';
-    $data .='      </v10:ClientDetail>';
-    $data .='      <v10:TransactionDetail>';
-    $data .='        <v10:CustomerTransactionId></v10:CustomerTransactionId>';
-    $data .='      </v10:TransactionDetail>';
-    $data .='      <v10:Version>';
-    $data .='        <v10:ServiceId>crs</v10:ServiceId>';
-    $data .='        <v10:Major>10</v10:Major>';
-    $data .='        <v10:Intermediate>0</v10:Intermediate>';
-    $data .='        <v10:Minor>0</v10:Minor>';
-    $data .='      </v10:Version>';
-    $data .='      <v10:ReturnTransitAndCommit>1</v10:ReturnTransitAndCommit>';
-    $data .='      <v10:CarrierCodes>FDXE</v10:CarrierCodes>';
-    $data .='      <v10:CarrierCodes>FDXG</v10:CarrierCodes>';
-    $data .='      <v10:RequestedShipment>';
-    $data .='        <v10:ShipTimestamp>' . date("Y-m-d\TH:i:sP") . '</v10:ShipTimestamp>';
-    $data .='        <v10:DropoffType>' . $pickupCode . '</v10:DropoffType>';
-    //$data .= '       <v10:ServiceType>' . $service . '</v10:ServiceType>';
-    $data .='        <v10:PackagingType>YOUR_PACKAGING</v10:PackagingType>';
-    $data .='        <v10:Shipper>';
-    $data .='          <v10:AccountNumber>' . $this->accountNumber . '</v10:AccountNumber>';
-    //$data .='          <v10:Tins>';
-    //$data .='            <v10:TinType></v10:TinType>';
-    //$data .='            <v10:Number></v10:Number>';
-    //$data .='            <v10:Usage></v10:Usage>';
-    //$data .='          </v10:Tins>';
-    //$data .='          <v10:Contact>';
-    //$data .='            <v10:ContactId></v10:ContactId>';
-    //$data .='            <v10:PersonName></v10:PersonName>';
-    //$data .='            <v10:CompanyName></v10:CompanyName>';
-    //$data .='            <v10:PhoneNumber></v10:PhoneNumber>';
-    //$data .='            <v10:PhoneExtension></v10:PhoneExtension>';
-    //$data .='            <v10:EMailAddress></v10:EMailAddress>';
-    //$data .='          </v10:Contact>';
-    $data .='          <v10:Address>';
-    //$data .='            <v10:StreetLines></v10:StreetLines>';
-    //$data .='            <v10:StreetLines></v10:StreetLines>';
-    //$data .='            <v10:City></v10:City>';
-    //$data .='            <v10:StateOrProvinceCode></v10:StateOrProvinceCode>';
-    $data .='            <v10:PostalCode>' . $this->fromZip . '</v10:PostalCode>';
-    //$data .='            <v10:UrbanizationCode></v10:UrbanizationCode>';
-    $data .='            <v10:CountryCode>' . $countryCode . '</v10:CountryCode>';
-    $data .='            <v10:Residential>' . $locationType . '</v10:Residential>';
-    $data .='          </v10:Address>';
-    $data .='        </v10:Shipper>';
-    $data .='        <v10:Recipient>';
-    //$data .='          <v10:Contact>';
-    //$data .='            <v10:PersonName></v10:PersonName>';
-    //$data .='            <v10:CompanyName></v10:CompanyName>';
-    //$data .='            <v10:PhoneNumber></v10:PhoneNumber>';
-    //$data .='            <v10:PhoneExtension></v10:PhoneExtension>';
-    //$data .='            <v10:EMailAddress></v10:EMailAddress>';
-    //$data .='          </v10:Contact>';
-    $data .='          <v10:Address>';
-    //$data .='            <v10:StreetLines></v10:StreetLines>';
-    //$data .='            <v10:StreetLines></v10:StreetLines>';
-    //$data .='            <v10:City></v10:City>';
-    //$data .='            <v10:StateOrProvinceCode></v10:StateOrProvinceCode>';
-    $data .='            <v10:PostalCode>' . $dest_zip . '</v10:PostalCode>';
-    //$data .='            <v10:UrbanizationCode></v10:UrbanizationCode>';
-    $data .='            <v10:CountryCode>' . $dest_country_code . '</v10:CountryCode>';
-    $data .='            <v10:Residential>' . $residential . '</v10:Residential>';
-    $data .='          </v10:Address>';
-    $data .='        </v10:Recipient>';
-    //$data .='        <v10:RecipientLocationNumber></v10:RecipientLocationNumber>';
-    $data .='        <v10:Origin>';
-    //$data .='          <v10:Contact>';
-    //$data .='            <v10:ContactId></v10:ContactId>';
-    //$data .='            <v10:PersonName></v10:PersonName>';
-    //$data .='            <v10:CompanyName></v10:CompanyName>';
-    //$data .='            <v10:PhoneNumber></v10:PhoneNumber>';
-    //$data .='            <v10:PhoneExtension></v10:PhoneExtension>';
-    //$data .='            <v10:EMailAddress></v10:EMailAddress>';
-    //$data .='          </v10:Contact>';
-    $data .='          <v10:Address>';
-    //$data .='            <v10:StreetLines></v10:StreetLines>';
-    //$data .='            <v10:StreetLines></v10:StreetLines>';
-    //$data .='            <v10:City></v10:City>';
-    //$data .='            <v10:StateOrProvinceCode></v10:StateOrProvinceCode>';
-    $data .='            <v10:PostalCode>' . $this->fromZip . '</v10:PostalCode>';
-    //$data .='            <v10:UrbanizationCode></v10:UrbanizationCode>';
-    $data .='            <v10:CountryCode>' . $countryCode . '</v10:CountryCode>';
-    $data .='            <v10:Residential>' . $locationType . '</v10:Residential>';
-    $data .='          </v10:Address>';
-    $data .='        </v10:Origin>';
-    $data .='        <v10:ShippingChargesPayment>';
-    $data .='          <v10:PaymentType>SENDER</v10:PaymentType>';
-    $data .='          <v10:Payor>';
-    $data .='            <v10:AccountNumber>' . $this->accountNumber . '</v10:AccountNumber>';
-    $data .='            <v10:CountryCode>' . $countryCode . '</v10:CountryCode>';
-    $data .='          </v10:Payor>';
-    $data .='        </v10:ShippingChargesPayment>';
-    $data .='        <v10:RateRequestTypes>ACCOUNT</v10:RateRequestTypes>';
-    $data .='        <v10:PackageCount>' . $this->getPackageCount() . '</v10:PackageCount>';
-    $data .=         $this->getRequestedPackageLineItems($weight);
-    $data .='      </v10:RequestedShipment>';
-    $data .='    </v10:RateRequest>';
-    $data .='  </soapenv:Body>';
-    $data .='</soapenv:Envelope>';
+    $path_to_wsdl = CART66_PATH . "/pro/models/RateService_v14.wsdl";
     
-    $ch = curl_init("https://gateway.fedex.com:443/web-services");
-    curl_setopt ($ch, CURLOPT_POST, 1);
-    curl_setopt($ch,CURLOPT_TIMEOUT, 60);  
-    curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);  
-    curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);  
-    curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);  
-    curl_setopt($ch,CURLOPT_POSTFIELDS,$data);
-    $result = curl_exec($ch);
-    curl_close($ch);
+    ini_set("soap.wsdl_cache_enabled", "0");
     
-    Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] FEDEX XML REQUEST: \n$data");
-    Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] FEDEX XML RESULT: \n$result");
+    $client = new SoapClient($path_to_wsdl, array('trace' => 1)); // Refer to http://us3.php.net/manual/en/ref.soap.php for more information
+
+    $request['WebAuthenticationDetail'] = array(
+      'UserCredential' => array(
+        'Key' => $this->developerKey, 
+        'Password' => $this->password
+      )
+    ); 
     
-    try{
-      $xml = new SimpleXmlElement($result);
-    }
-    catch(Exception $e){
-      Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Cart66 Exception caught when trying to get FedEx XML Response: " . $e->getMessage() . " \n");
-      $rate = false;
-    }
+    $request['ClientDetail'] = array(
+      'AccountNumber' => $this->accountNumber, 
+      'MeterNumber' => $this->meterNumber
+    );
     
-    if(isset($xml->children("soapenv", true)->Body->children("v10", true)->RateReply->HighestSeverity)) {
-      $response = $xml->children("soapenv", true)->Body->children("v10", true)->RateReply->HighestSeverity;
-      $rateReplyDetails = $xml->children("soapenv", true)->Body->children("v10", true)->RateReply->RateReplyDetails;
+    $request['TransactionDetail'] = array('CustomerTransactionId' => ' *** Rate Available Services Request v14 using PHP ***');
+    $request['Version'] = array(
+      'ServiceId' => 'crs', 
+      'Major' => '14', 
+      'Intermediate' => '0', 
+      'Minor' => '0'
+    );
+    $request['ReturnTransitAndCommit'] = true;
+    $request['RequestedShipment']['DropoffType'] = $pickupCode; // valid values REGULAR_PICKUP, REQUEST_COURIER, ...
+    
+    $request['RequestedShipment']['ShipTimestamp'] = date('c');
+    
+    // Service Type and Packaging Type are not passed in the request
+    $request['RequestedShipment']['Shipper'] = array(
+      'Address' => array(
+        'PostalCode' => $this->fromZip,
+        'CountryCode' => $countryCode,
+        'Residential' => $locationType
+      )
+    );
+    
+    $request['RequestedShipment']['Recipient'] = array(
+      'Address' => array(
+        'PostalCode' => $dest_zip,
+        'CountryCode' => $dest_country_code,
+        'Residential' => $residential
+      )
+    );
+    
+    $request['RequestedShipment']['ShippingChargesPayment'] = array(
+      'PaymentType' => 'SENDER',
+         'Payor' => array(
+        'ResponsibleParty' => array(
+          'AccountNumber' => $this->accountNumber,
+          'Contact' => null,
+          'Address' => array(
+            'CountryCode' => $countryCode
+          )
+        )
+      )
+    );
+    
+    $request['RequestedShipment']['RateRequestTypes'] = 'ACCOUNT'; 
+    $request['RequestedShipment']['RateRequestTypes'] = 'LIST'; 
+    $request['RequestedShipment']['PackageCount'] = $this->getPackageCount();
+    
+    $request['RequestedShipment']['RequestedPackageLineItems'] = $this->getRequestedPackageLineItems($weight);
+    
+    try {
+      $client->__setLocation('https://gateway.fedex.com:443/web-services');
       
-      Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Response Description: (Service: $service) $service");
-      if($response == "FAILURE" || $response == "ERROR") {
-        $error = $xml->children("soapenv", true)->Body->children("v10", true)->RateReply->Notifications->Message;
-        Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Response Description: (Service: $service) $response $error");
-        $rate = false;
-      }
-      else {
+      $response = $client->getRates($request);
+        
+      if($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR') {
         $rate = array();
-        foreach($rateReplyDetails as $r) {
-          $service = $r->ServiceType;
-          $amount = $r->RatedShipmentDetails->ShipmentRateDetail->TotalNetCharge->Amount;
-          $rate[] = array('name' => $service, 'rate' => $amount);
+        if(is_array($response->RateReplyDetails)){
+          foreach($response->RateReplyDetails as $rateReply){
+            $serviceType = $rateReply->ServiceType;
+            $amount = $rateReply->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount;
+            $rate[] = array('name' => $serviceType, 'rate' => $amount);
+          }
+        }
+        else{
+          $serviceType = $response->RateReplyDetails->ServiceType;
+          $amount = $response->RateReplyDetails->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount;
+          $rate[] = array('name' => $serviceType, 'rate' => $amount);
         }
       }
-    } else {
+      else {
+        $rate = false;
+        Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Error: " . print_r($response->Notifications, true));
+      }
+    }
+    catch (SoapFault $exception) {
+      $this->printFault($exception, $client);
+      Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] FedEx Error|| Code: " . $exception->faultcode . " Message: " . $exception->faultstring);
+      Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Client Details: " . print_r($client, true));
       $rate = false;
     }
     return $rate;
+    
   }
   
   /**
@@ -218,8 +160,8 @@ class Cart66FedEx {
               $rates[$service] = number_format((float) $r["rate"], 2, '.', '');
             }
           }
-          Cart66Common::log("LIVE RATE REMOTE RESULT ==> ZIP: $toZip Service: $service $code) Rate: " . print_r($rates, true));
         }
+        Cart66Common::log("LIVE RATE REMOTE RESULT ==> ZIP: $toZip Service: $service $code) Rate: " . print_r($rates, true));
       }
       $fedexServices = $method->getServicesForCarrier('fedex_intl');
       $rate = $this->getRate($this->fromZip, $toZip, $toCountryCode, null, $weight);
@@ -230,8 +172,8 @@ class Cart66FedEx {
               $rates[$service] = number_format((float) $r["rate"], 2, '.', '');
             }
           }
-          Cart66Common::log("LIVE RATE REMOTE RESULT ==> ZIP: $toZip Service: $service $code) Rate: " . print_r($rates, true));
         }
+        Cart66Common::log("LIVE RATE REMOTE RESULT ==> ZIP: $toZip Service: $service $code) Rate: " . print_r($rates, true));
       }
     } else {
       $fedexServices = $method->getServicesForCarrier('fedex_intl');
@@ -243,8 +185,8 @@ class Cart66FedEx {
               $rates[$service] = number_format((float) $r["rate"], 2, '.', '');
             }
           }
-          Cart66Common::log("LIVE RATE REMOTE RESULT ==> ZIP: $toZip Service: $service $code) Rate: " . print_r($rates, true));
         }
+        Cart66Common::log("LIVE RATE REMOTE RESULT ==> ZIP: $toZip Service: $service $code) Rate: " . print_r($rates, true));
       }
     }
     return $rates;
@@ -271,58 +213,42 @@ class Cart66FedEx {
     $length = 0;
     $width = 0;
     $height = 0;
-    $data = '';
+    $data = array();
     if(Cart66Setting::getValue('fedex_ship_individually')) {
       foreach($items as $item) {
         for($i=1; $i <= $item->getQuantity(); $i++){
-          $data .='        <v10:RequestedPackageLineItems>';
-          $data .='          <v10:SequenceNumber>1</v10:SequenceNumber>';
-          $data .='          <v10:GroupNumber>1</v10:GroupNumber>';
-          $data .='          <v10:GroupPackageCount>1</v10:GroupPackageCount>';
-          $data .='          <v10:Weight>';
-          $data .='            <v10:Units>' . $this->weightUnits . '</v10:Units>';
-          $data .='            <v10:Value>' . $item->getWeight() . '</v10:Value>';
-          $data .='          </v10:Weight>';
-          $data .='          <v10:Dimensions>';
-          $data .='            <v10:Length>' . $length . '</v10:Length>';
-          $data .='            <v10:Width>' . $width . '</v10:Width>';
-          $data .='            <v10:Height>' . $height . '</v10:Height>';
-          $data .='            <v10:Units>' . $this->dimensionsUnits . '</v10:Units>';
-          $data .='          </v10:Dimensions>';
-          //$data .='          <v10:PhysicalPackaging></v10:PhysicalPackaging>';
-          //$data .='          <v10:ContentRecords>';
-          //$data .='            <v10:PartNumber></v10:PartNumber>';
-          //$data .='            <v10:ItemNumber></v10:ItemNumber>';
-          //$data .='            <v10:ReceivedQuantity></v10:ReceivedQuantity>';
-          //$data .='            <v10:Description></v10:Description>';
-          //$data .='          </v10:ContentRecords>';
-          $data .='        </v10:RequestedPackageLineItems>';
+          $data[] = array(
+            'SequenceNumber' => $i,
+            'GroupPackageCount' => 1,
+            'Weight' => array(
+              'Value' => $item->getWeight(),
+              'Units' => $this->weightUnits
+            ),
+            'Dimensions' => array(
+              'Length' => $length,
+              'Width' => $width,
+              'Height' => $height,
+              'Units' => $this->dimensionsUnits
+            )
+          );
         }
       }
     }
     else {
-      $data .='        <v10:RequestedPackageLineItems>';
-      $data .='          <v10:SequenceNumber>1</v10:SequenceNumber>';
-      $data .='          <v10:GroupNumber>1</v10:GroupNumber>';
-      $data .='          <v10:GroupPackageCount>1</v10:GroupPackageCount>';
-      $data .='          <v10:Weight>';
-      $data .='            <v10:Units>' . $this->weightUnits . '</v10:Units>';
-      $data .='            <v10:Value>' . $weight . '</v10:Value>';
-      $data .='          </v10:Weight>';
-      $data .='          <v10:Dimensions>';
-      $data .='            <v10:Length>' . $length . '</v10:Length>';
-      $data .='            <v10:Width>' . $width . '</v10:Width>';
-      $data .='            <v10:Height>' . $height . '</v10:Height>';
-      $data .='            <v10:Units>' . $this->dimensionsUnits . '</v10:Units>';
-      $data .='          </v10:Dimensions>';
-      //$data .='          <v10:PhysicalPackaging></v10:PhysicalPackaging>';
-      //$data .='          <v10:ContentRecords>';
-      //$data .='            <v10:PartNumber></v10:PartNumber>';
-      //$data .='            <v10:ItemNumber></v10:ItemNumber>';
-      //$data .='            <v10:ReceivedQuantity></v10:ReceivedQuantity>';
-      //$data .='            <v10:Description></v10:Description>';
-      //$data .='          </v10:ContentRecords>';
-      $data .='        </v10:RequestedPackageLineItems>';
+      $data[] = array(
+        'SequenceNumber' => 1,
+        'GroupPackageCount' => 1,
+        'Weight' => array(
+          'Value' => $weight,
+          'Units' => $this->weightUnits
+        ),
+        'Dimensions' => array(
+          'Length' => $length,
+          'Width' => $width,
+          'Height' => $height,
+          'Units' => $this->dimensionsUnits
+        )
+      );
     }
     return $data;
   }

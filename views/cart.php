@@ -13,7 +13,7 @@ $setting = new Cart66Setting();
 
 
 // Try to return buyers to the last page they were on when the click to continue shopping
-if(Cart66Setting::getValue('continue_shopping') == 1){
+if(Cart66Setting::getValue('continue_shopping') == 'store_home'){
   // force the last page to be store home
   $lastPage = Cart66Setting::getValue('store_url') ? Cart66Setting::getValue('store_url') : get_bloginfo('url');
   Cart66Session::set('Cart66LastPage', $lastPage);

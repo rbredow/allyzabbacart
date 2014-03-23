@@ -18,6 +18,7 @@ class ZendeskRemoteAuth {
         "email" => $email
       );
       
+      include_once(CART66_PATH . "/pro/models/JWT.php");
       $jwt = JWT::encode($token, $key);
       
       // Redirect

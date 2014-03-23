@@ -269,7 +269,11 @@ if($session_token == $token):
     if($isTaxed == false) {
       $isTaxed = $taxRate->loadByState($state);
     }
-  
+    
+    if($isTaxed == false) {
+      $isTaxed = $taxRate->loadByState('All Sales');
+    }
+    
     if($isTaxed) {
       $taxable = Cart66Session::get('Cart66Cart')->getTaxableAmount($taxRate->tax_shipping);
       $tax = number_format($taxable * ($taxRate->rate/100), 2, '.', '');
@@ -331,7 +335,8 @@ if($session_token == $token):
       <input type="hidden" name="tax" value="<?php echo $tax; ?>">
     
       <?php 
-        if(Cart66Common::isLoggedIn()) {
+        if($account_id = Cart66Common::isLoggedIn()) {
+          $account = new Cart66Account($account_id);
           $name = $account->firstName . '&nbsp;' . $account->lastName;
           $logout = Cart66Common::appendQueryString('cart66-task=logout');
           echo "<p id='Cart66PayPalExpressLoggedIn'><strong>You Are Logged In As $name</strong><br/>If you are not $name <a href='$logout'>Log out</a></p>";
