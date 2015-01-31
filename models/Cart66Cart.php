@@ -1127,9 +1127,9 @@ class Cart66Cart {
         foreach($rates as $name => $price) {
           $price = number_format($price, 2, '.', '');
           if(in_array($name, $uspsServices)) {
-            $name = str_replace('1-Day', '1-3 Days', $name);
-            $name = str_replace('2-Day', '2-4 Days', $name);
-            $name = str_replace('3-Day', '3-5 Days', $name);
+            $name = str_replace('1-Day', '2-5 Days', $name);
+            $name = str_replace('2-Day', '3-6 Days', $name);
+            $name = str_replace('3-Day', '4-7 Days', $name);
             $this->_liveRates->addRate('USPS', 'USPS ' . $name, $price);
           }
         }
