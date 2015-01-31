@@ -96,9 +96,6 @@ class Cart66Usps {
           $rate = (float)$service->Rate;
           $name = str_replace('&lt;sup&gt;&#174;&lt;/sup&gt;', '', $name);
           $name = str_replace('&lt;sup&gt;&#8482;&lt;/sup&gt;', '', $name);
-          $name = str_replace('1-Day', '1-3 Days', $name);
-          $name = str_replace('2-Day', '2-4 Days', $name);
-          $name = str_replace('3-Day', '3-5 Days', $name);
           $this->addRate($name, $rate);
         }
       }
