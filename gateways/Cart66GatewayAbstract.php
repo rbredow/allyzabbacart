@@ -405,7 +405,7 @@ abstract class Cart66GatewayAbstract {
 
     $orderInfo['phone'] = preg_replace("/[^0-9]/", "", $p['phone']);
     $orderInfo['email'] = $p['email'];
-    $orderInfo['custom_field'] = $p['custom-field'];
+    $orderInfo['custom_field'] = (isset($p['custom-field']) ? $p['custom-field'] : '');
     $orderInfo['coupon'] = Cart66Common::getPromoMessage();
     $orderInfo['tax'] = $tax;
     $orderInfo['shipping'] = Cart66Session::get('Cart66Cart')->getShippingCost();

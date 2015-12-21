@@ -61,6 +61,10 @@ class Cart66Order extends Cart66ModelAbstract {
       
       $this->_db->insert($this->_tableName, $this->_orderInfo);
       $this->id = $this->_db->insert_id;
+      if($this->id == 0 || empty($this->id)) {
+        throw new Cart66Exception('The order was not saved.');
+        return false;
+      }
       $key = $this->_orderInfo['trans_id'] . '-' . $this->id . '-';
       
       foreach($this->_items as $item) {
@@ -346,6 +350,13 @@ class Cart66Order extends Cart66ModelAbstract {
       $o->load($order->id);
       $o->deleteMe(true, true);
     }
+  }
+  
+  public function getAffiliateTotal(){
+    // return portion of order total eligible for affiliate comission
+    $affiliate_total = $this->total - ($this->shipping + $this->tax);
+    $affiliate_total = Cart66Common::currencyFormat($affiliate_total, 2, '.', '');
+    return $affiliate_total;
   }
   
 }

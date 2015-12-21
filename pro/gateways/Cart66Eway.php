@@ -67,7 +67,7 @@ class Cart66Eway extends Cart66GatewayAbstract {
   }
    
   public function addField($field, $value) {
-    $this->fields["$field"] = $value;   
+    $this->fields["$field"] = htmlspecialchars($value, ENT_QUOTES, "UTF-8");   
   }
 
   public function initCheckout($total) {

@@ -178,7 +178,7 @@ $tab = 'gateway-gateway_settings';
           <tr valign="top">
             <th scope="row"><?php _e('Strip Line breaks', 'cart66'); ?></th>
             <td>
-              <input type="checkbox" name="strip_paypal_line_breaks" id="strip_paypal_line_breaks" value="true" <?php echo Cart66Setting::getValue('strip_paypal_line_breaks') ? 'checked="checked" ' : '' ?>>              
+              <input type="checkbox" name="strip_paypal_line_breaks" id="strip_paypal_line_breaks" value="true" <?php echo Cart66Setting::getValue('strip_paypal_line_breaks') ? 'checked="checked" ' : '' ?>>
               <p class="description"><?php _e( 'Check this box if there are display issues with line breaks being turned into p and br tags.' , 'cart66' ); ?></p>
             </td>
           </tr>
@@ -289,7 +289,7 @@ $tab = 'gateway-gateway_settings';
               <th scope="row"><?php _e('Gateway', 'cart66'); ?></th>
               <td>
                 <select name="auth_url" id="auth_url">
-                  <option id="authorize_url" value="https://secure.authorize.net/gateway/transact.dll">Authorize.net</option>
+                  <option id="authorize_url" value="https://secure2.authorize.net/gateway/transact.dll">Authorize.net</option>
                   <option id="authorize_test_url" value="https://test.authorize.net/gateway/transact.dll">Authorize.net Test</option>
                   <option id="quantum_url" value="https://secure.quantumgateway.com/cgi/authnet_aim.php">Quantum Gateway</option>
                   <option id="eway_url" value="https://www.eway.com.au/gateway_cvn/xmlpayment.asp">eWay</option>
@@ -490,7 +490,7 @@ $tab = 'gateway-gateway_settings';
       $('#cart66-inner-tabs div.pane').hide();
       $('#cart66-inner-tabs div#<?php echo $tab; ?>').show();
       $('#cart66-inner-tabs ul li a.<?php echo $tab; ?>').addClass('current');
-      
+
       $('#cart66-inner-tabs ul li a').click(function(){
         $('#cart66-inner-tabs ul li a').removeClass('current');
         $(this).addClass('current');

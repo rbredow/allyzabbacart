@@ -173,60 +173,65 @@ if(isset($data['resend']) && $data['resend'] == true) {
       </tr>
       <?php if($order->shipping_method != 'None' && $order->hasShippingInfo()): ?>
         
-        <tr>
-          <th style="text-align: left;"><br/><?php _e( 'Shipping Information' , 'cart66' ); ?></th>
-          <th style="text-align: left;">&nbsp;</th>
-        </tr>
-        <tr>
-          <td valign="top">
-            <?php echo $order->ship_first_name ?> <?php echo $order->ship_last_name ?><br/>
-            <?php echo $order->ship_address ?><br/>
-            <?php if(!empty($order->ship_address2)): ?>
-              <?php echo $order->ship_address2 ?><br/>
-            <?php endif; ?>
-            <?php echo $order->ship_city ?> <?php echo $order->ship_state ?> <?php echo $order->ship_zip ?><br/>
-            <?php echo $order->ship_country ?><br/>
-            <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['shipping'])): ?><br />
-              <?php foreach($additional_fields['shipping'] as $af): ?>
-                <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
-              <?php endforeach; ?>
-            <?php endif; ?>
-            <br/><em><?php _e( 'Delivery via' , 'cart66' ); ?>: <?php echo $order->shipping_method ?></em></br>
+      <tr>
+        <th style="text-align: left;"><br/><?php _e( 'Shipping Information' , 'cart66' ); ?></th>
+        <th style="text-align: left;">&nbsp;</th>
+      </tr>
+      <tr>
+        <td valign="top">
+          <?php echo $order->ship_first_name ?> <?php echo $order->ship_last_name ?><br/>
+          <?php echo $order->ship_address ?><br/>
+          <?php if(!empty($order->ship_address2)): ?>
+            <?php echo $order->ship_address2 ?><br/>
+          <?php endif; ?>
+          <?php echo $order->ship_city ?> <?php echo $order->ship_state ?> <?php echo $order->ship_zip ?><br/>
+          <?php echo $order->ship_country ?><br/>
+          <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['shipping'])): ?><br />
+            <?php foreach($additional_fields['shipping'] as $af): ?>
+              <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
+            <?php endforeach; ?>
+          <?php endif; ?>
+          <br/><em><?php _e( 'Delivery via' , 'cart66' ); ?>: <?php echo $order->shipping_method ?></em></br>
+        </td>
+      </tr>
+      <?php endif; ?>
+
+          <?php
+          $hasDigital = false;
+          $product = new Cart66Product();
+          foreach($order->getItems() as $downloadItem) {
+            if($product->loadByDuid($downloadItem->duid) && $product->isDigital()) {
+              $hasDigital = true;
+            }
+          }
+          ?>
+          <?php if($hasDigital): ?>
+      <tr>
+        <td valign="top">
+            <br /><?php _e('Downloads', 'cart66'); ?>:<br />
             <?php
-            $hasDigital = false;
             $product = new Cart66Product();
             foreach($order->getItems() as $downloadItem) {
               if($product->loadByDuid($downloadItem->duid) && $product->isDigital()) {
-                $hasDigital = true;
-              }
+                $order_item_id = $product->loadItemIdByDuid($downloadItem->duid);
+                $downloadTimes = $product->countDownloadsForDuid($downloadItem->duid, $order_item_id); ?>
+                  <em><?php echo $product->name; ?>: <?php echo $downloadTimes; ?> <?php _e('out of', 'cart66'); ?> <?php echo ($product->download_limit == 0) ? __('unlimited', 'cart66') : $product->download_limit; ?></em>
+                  <form id="ResetDownloads" action="" method='post' class="remove_tracking">
+                    <input type='hidden' name='task' value='reset download amount'>
+                    <input type='hidden' name='order_id' value='<?php echo $order->id; ?>'>
+                    <input type='hidden' name='order_item_id' value='<?php echo $order_item_id; ?>'>
+                    <input type='hidden' name='duid' value='<?php echo $downloadItem->duid; ?>'>
+                    <input type='submit' class="remove_tracking" value="<?php _e( 'Reset Downloads' , 'cart66' ); ?>" />
+                  </form><br />
+              <?php }
             }
             ?>
-            <?php if($hasDigital): ?>
-              <br /><?php _e('Downloads', 'cart66'); ?>:<br />
-              <?php
-              $product = new Cart66Product();
-              foreach($order->getItems() as $downloadItem) {
-                if($product->loadByDuid($downloadItem->duid) && $product->isDigital()) {
-                  $order_item_id = $product->loadItemIdByDuid($downloadItem->duid);
-                  $downloadTimes = $product->countDownloadsForDuid($downloadItem->duid, $order_item_id); ?>
-                    <em><?php echo $product->name; ?>: <?php echo $downloadTimes; ?> <?php _e('out of', 'cart66'); ?> <?php echo ($product->download_limit == 0) ? __('unlimited', 'cart66') : $product->download_limit; ?></em>
-                    <form id="ResetDownloads" action="" method='post' class="remove_tracking">
-                      <input type='hidden' name='task' value='reset download amount'>
-                      <input type='hidden' name='order_id' value='<?php echo $order->id; ?>'>
-                      <input type='hidden' name='order_item_id' value='<?php echo $order_item_id; ?>'>
-                      <input type='hidden' name='duid' value='<?php echo $downloadItem->duid; ?>'>
-                      <input type='submit' class="remove_tracking" value="<?php _e( 'Reset Downloads' , 'cart66' ); ?>" />
-                    </form><br />
-                <?php }
-              }
-              ?>
-              <br />
-            <?php endif; ?>
-          </td>
-          <td>&nbsp;</td>
-        </tr>
-        
-      <?php endif; ?>
+            <br />     
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+      <?php endif; ?> 
+
       <?php if(CART66_PRO && Cart66Setting::getValue('enable_advanced_notifications') ==1): ?>
         <tr>
           <td><br/>

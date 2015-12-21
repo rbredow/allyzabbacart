@@ -379,3 +379,6 @@ alter table `[prefix]orders` add column `custom_field` text default '' not null;
 
 -- Upgrading to Cart66 1.5.1.4
 alter table `[prefix]orders` add column `additional_fields` longtext default '' not null;
+
+-- Upgrading to Cart66 1.5.6
+alter table `[prefix]orders` modify `trans_id` varchar(255) not null;
