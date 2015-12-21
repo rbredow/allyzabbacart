@@ -383,3 +383,6 @@ alter table `[prefix]orders` add column `additional_fields` longtext default '' 
 -- Upgrading to membership based pricing levels
 alter table `[prefix]products` add column `price_membership` varchar(255) not null;
 alter table `[prefix]promotions` add column `membership_eligibility` varchar(255) not null;
+
+-- Upgrading to Cart66 1.5.6
+alter table `[prefix]orders` modify `trans_id` varchar(255) not null;
