@@ -281,7 +281,11 @@ if(isset($data['resend']) && $data['resend'] == true) {
     echo $link.$order->ouid ;
     
   ?>" target="_blank"><?php _e( 'View Receipt Online' , 'cart66' ); ?></a> | 
-  <a href='#' id="print_version"><?php _e( 'Printer Friendly Receipt' , 'cart66' ); ?></a></p>
+  <a href='#' id="print_version"><?php _e( 'Printer Friendly Receipt' , 'cart66' ); ?></a> | 
+  <?php if (Cart66Setting::getValue('enable_endicia')) : ?>
+    <a href="<?php echo Cart66Endicia::shipLink($order)?>">Endicia</a> | 
+  <?php endif; ?>
+  <a href='#' id="packing_slip">Packing List</a> </p>
 
   <?php if(CART66_PRO): ?> | 
     <form id="EmailReceipt" action="" method='post' class="remove_tracking">
@@ -336,7 +340,7 @@ if(isset($data['resend']) && $data['resend'] == true) {
             <option value=""></option>
             <option value="FedEx"><?php _e( 'FedEx' , 'cart66' ); ?></option>
             <option value="UPS"><?php _e( 'UPS' , 'cart66' ); ?></option>
-            <option value="USPS"><?php _e( 'USPS' , 'cart66' ); ?></option>
+            <option value="USPS" selected><?php _e( 'USPS' , 'cart66' ); ?></option>
             <option value="DHL"><?php _e( 'DHL' , 'cart66' ); ?></option>
             <option value="CaPost"><?php _e( 'Canada Post' , 'cart66' ); ?></option>
             <option value="AuPost"><?php _e( 'Australia Post' , 'cart66' ); ?></option>
@@ -399,4 +403,27 @@ if(isset($data['resend']) && $data['resend'] == true) {
       $('#btnDel').attr('disabled','disabled');
     })
   })(jQuery);
+
+</script>
+
+  <?php
+  
+  if($order !== false) {
+    $printView = Cart66Common::getView('views/packing_list.php', array('order' => $order));
+    $printView = str_replace("\n", '', $printView);
+    $printView = str_replace("'", '"', $printView);
+  }
+?>
+
+<script type="text/javascript">
+//<![CDATA[
+jQuery(document).ready(function($) {
+  $('#packing_slip').click(function() {
+    myWindow = window.open('','Your_Receipt','resizable=yes,scrollbars=yes,width=550,height=700');
+    myWindow.document.open("text/html","replace");
+    myWindow.document.write('<?php echo $printView; ?>');
+    return false;
+  });
+});
+//]]>
 </script>

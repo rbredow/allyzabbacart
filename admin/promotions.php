@@ -165,6 +165,11 @@ elseif(isset($_GET['task']) && $_GET['task'] == 'delete' && isset($_GET['id']) &
                   <p class="label_desc"><?php _e('Enter the names of products in your inventory that this promotion will either be be applied to or that will be excluded from this promotion.  You can enter as many products as you want.  If you want this promotion to apply to all orders, leave this field blank.  If you have selected to apply this promotion to shipping or the cart total and are including these products, this promotion will only apply if the products in this list match the products in the cart and vice versa.', 'cart66'); ?></p>
                 </li>
                 <li>
+                  <label class="long" for="promo-membership_eligibility"><?php _e( 'Membership Eligibility' , 'cart66' ); ?>:</label>
+                  <input type="text" id="promo-membership_eligibility" class ="large" name="promo[membership_eligibility]" value='<?php echo $promo->membership_eligibility ?>' /><br /><br/>
+                  <p class="label_desc"><?php _e('What membership groups can use the coupon? Leave blank for everyone. For discounts only for users who are not logged in, write <strong>guest</strong>. To include certain membership groups only put them in a comma separated list (ie: <strong>dropship, wholesale</strong>).', 'cart66'); ?></p>
+                </li>
+                <li>
                   <div class="desc"><?php _e('Additional settings', 'cart66'); ?>:</div>
                   <div class="collection checkbox">
                     <input type="hidden" name='promo[enable]' value="" />

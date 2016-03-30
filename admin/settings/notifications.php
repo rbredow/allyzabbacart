@@ -53,6 +53,11 @@ $mustache_elements = array(
   'ouid',
   'shipping_method',
   'account_id',
+  'feature_level',
+  'subscription_plan_name',
+  'active_until',
+  'billing_interval',
+  'username',
   'tracking_number:$i. $carrier:'
 );
 ?>

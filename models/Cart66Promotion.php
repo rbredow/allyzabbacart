@@ -551,7 +551,38 @@ class Cart66Promotion extends Cart66ModelAbstract {
     if(!$cartObject){
      $cartObject = Cart66Session::get('Cart66Cart');
     }
+
+    // First, check to see if a membership group is excluded from using this coupon
+    if ($this->membership_eligibility) {
+      Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] This coupon requires a membership to use:". $this->membership_eligibility);
+      if(Cart66Common::isLoggedIn()) {
+        if ($this->membership_eligibility == "guest") {
+          // The user is logged in as a non-guest and this is a guest-only coupon. Return 0.00
+          Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] The user is logged in as a non-guest and this is a guest-only coupon.");
+          return number_format($discount, 2, '.', '');
+        }
+        $account = new Cart66Account();
+        if($account->load(Cart66Session::get('Cart66AccountId'))) {
+          $userFeatureLevel = $account->getFeatureLevel();
+          $allowedLevels = Cart66Common::trimmedExplode(',', $this->membership_eligibility);
+          Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] The user is logged in as " . $userFeatureLevel);
+          if (!in_array($userFeatureLevel,$allowedLevels)) {
+            // The user is logged in, but cannot use this coupon. Return 0.00
+            Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] The user is logged in as " . $userFeatureLevel . " and is not eligible to use this coupon.");
+            return number_format($discount, 2, '.', '');
+          }
+        } 
+      } else  {
+	// The user is not logged in...and this coupon requires a login to work, no discount
+        if ($this->membership_eligibility && $this->membership_eligibility != "guest") {
+          Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] The user is not logged in, cant use this coupon as guest.");
+          return number_format($discount, 2, '.', '');
+        }
+      }
+
  
+    }
+
     if($this->apply_to == "products" && !empty($cartObject)) {
      // coupon applies to products
       $products = explode(',', $this->products);

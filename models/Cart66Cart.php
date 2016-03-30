@@ -763,6 +763,11 @@ class Cart66Cart {
     $pre_string = isset($orderInfo['status']) && $orderInfo['status'] == 'checkout_pending' ? 'CP-' : 'MT-';
     $orderInfo['trans_id'] = (empty($orderInfo['trans_id'])) ? $pre_string . Cart66Common::getRandString() : $orderInfo['trans_id'];
     $orderInfo['ip'] = $_SERVER['REMOTE_ADDR'];
+    // Is the user logged in, if so, let's store their account ID in the order
+    if(Cart66Common::isLoggedIn()) {
+      $account = new Cart66Account();
+      $orderInfo['account_id'] = Cart66Session::get('Cart66AccountId');
+    }
     if(Cart66Session::get('Cart66Promotion')){
        $orderInfo['discount_amount'] = Cart66Session::get('Cart66Promotion')->getDiscountAmount(Cart66Session::get('Cart66Cart'));
     }
@@ -1122,6 +1127,9 @@ class Cart66Cart {
         foreach($rates as $name => $price) {
           $price = number_format($price, 2, '.', '');
           if(in_array($name, $uspsServices)) {
+            $name = str_replace('1-Day', '2-5 Days', $name);
+            $name = str_replace('2-Day', '3-6 Days', $name);
+            $name = str_replace('3-Day', '4-7 Days', $name);
             $this->_liveRates->addRate('USPS', 'USPS ' . $name, $price);
           }
         }
