@@ -9,32 +9,32 @@ abstract class Cart66GatewayAbstract {
   protected $_taxRate;
 
   /**
-   * Return an array of available credit card types where the keys are the display values and the values 
+   * Return an array of available credit card types where the keys are the display values and the values
    * are the submitted values.
-   * 
+   *
    * @return array
    */
   public abstract function getCreditCardTypes();
-  
+
   /**
    * Prepare the gateway to process a transaction.
    * Perhaps api credentials need to be set or other pre-sales setup
-   * 
+   *
    * @param decimal Total amount to charge to credit card
    */
   public abstract function initCheckout($total);
-  
+
   /**
    * Attempt to process a sales
    */
   public abstract function doSale();
-  
+
   /**
    * Return a description explaining the results from an attempt to process a transaction through a gateway.
    * This information may be the reason for a transaction decline or a transaction failure
    */
   public abstract function getTransactionResponseDescription();
-  
+
   public function __construct() {
     $this->_billing = array(
       'firstName' => '',
@@ -52,7 +52,7 @@ abstract class Cart66GatewayAbstract {
         $this->_billing[$key] = isset($billing_field['default']) ? $billing_field['default'] : '';
       }
     }
-    
+
     $this->_payment = array(
       'cardType' => '',
       'cardNumber' => '',
@@ -71,7 +71,7 @@ abstract class Cart66GatewayAbstract {
         $this->_payment[$key] = isset($payment_field['default']) ? $payment_field['default'] : '';
       }
     }
-    
+
     $this->_shipping = array(
       'firstName' => '',
       'lastName' => '',
@@ -88,9 +88,9 @@ abstract class Cart66GatewayAbstract {
         $this->_shipping[$key] = isset($shipping_field['default']) ? $shipping_field['default'] : '';
       }
     }
-    
+
   }
-  
+
   public function getErrors() {
     if(!is_array($this->_errors)) {
       $this->_errors = array();
@@ -153,7 +153,7 @@ abstract class Cart66GatewayAbstract {
         }
       }
     }
-  } 
+  }
 
   public function setPayment($p) {
     if(is_array($p)) {
@@ -211,12 +211,12 @@ abstract class Cart66GatewayAbstract {
         $this->_errors['Payment Card Number'] = __('Invalid credit card number','cart66');
         $this->_jqErrors[] = "payment-cardNumber";
       }
-      
+
       if(!Cart66Common::isValidEmail($p['email'])) {
         $this->_errors['Email'] = __("Email address is not valid","cart66");
         $this->_jqErrors[] = 'payment-email';
       }
-      
+
       if(Cart66Setting::getValue('checkout_custom_field_display') == 'required' && $p['custom-field'] == '') {
         $this->_errors['Custom Field'] = Cart66Setting::getValue('checkout_custom_field_error_label') ? Cart66Setting::getValue('checkout_custom_field_error_label') : __('The Special Instructions Field is required', 'cart66');
         $this->_jqErrors[] = 'checkout-custom-field-multi';
@@ -312,11 +312,11 @@ abstract class Cart66GatewayAbstract {
     );
     return $taxLocation;
   }
-  
+
   /**
-   * Return the last $lenght digits of the credit card number or false 
+   * Return the last $lenght digits of the credit card number or false
    * if the number is not set or is shorter than the requested length.
-   * 
+   *
    * @param int (optional) The number of digits to return
    * @return int | false
    */
@@ -344,7 +344,7 @@ abstract class Cart66GatewayAbstract {
 
        $this->_taxRate = $taxRate;
        $taxShipping = $taxRate->tax_shipping;
-     
+
        return ($isShippingTaxed==null) ? $isTaxed : $taxShipping;
      }
      else {
@@ -360,7 +360,7 @@ abstract class Cart66GatewayAbstract {
     $taxShipping = ($this->isTaxed('shipping') == 1) ? true : false;
     return $taxShipping;
   }
-  
+
   public function getTaxRate() {
     return $this->_taxRate->rate;
   }
@@ -416,7 +416,7 @@ abstract class Cart66GatewayAbstract {
     $orderInfo['ordered_on'] = date('Y-m-d H:i:s', Cart66Common::localTs());
     $orderInfo['shipping_method'] = Cart66Session::get('Cart66Cart')->getShippingMethodName();
     $orderInfo['account_id'] = $accountId;
-    
+
     $additional_fields = array();
     $custom_payment_fields = apply_filters('cart66_after_payment_form', '');
     if(is_array($custom_payment_fields)) {
@@ -446,15 +446,16 @@ abstract class Cart66GatewayAbstract {
     if(!empty($additional_fields)) {
       $orderInfo['additional_fields'] = serialize($additional_fields);
     }
-    
+
+    $orderInfo = Cart66Common::deNullArrayValues($orderInfo);
     $orderId = Cart66Session::get('Cart66Cart')->storeOrder($orderInfo);
     return $orderId;
   }
-  
+
   /**
    * Make sure there is at least one product in the cart.
    * Return true if the cart is valid, otherwise false.
-   * 
+   *
    * @return boolean
    */
   public function validateCartForCheckout() {
@@ -466,6 +467,6 @@ abstract class Cart66GatewayAbstract {
     }
     return $isValid;
   }
-  
-  
+
+
 }

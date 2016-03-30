@@ -1,13 +1,13 @@
 <?php
 class Cart66EmailLog extends Cart66ModelAbstract {
-  
+
   public function __construct($id=null) {
     $this->_tableName = Cart66Common::getTableName('email_log');
     parent::__construct($id);
   }
-  
+
   public function saveEmailLog($email_data, $email_type, $copy, $status) {
-    
+
     if(Cart66Setting::getValue('enable_email_log') == 1) {
       global $wpdb;
       $date = date("Y-m-d H:i:s", Cart66Common::localTs());
@@ -30,12 +30,13 @@ class Cart66EmailLog extends Cart66ModelAbstract {
         'status' => $status
       );
       $logTable = Cart66Common::getTableName('email_log');
+      $data = Cart66Common::deNullArrayValues($data);
       $wpdb->insert($logTable, $data);
       $emailLogId = $wpdb->insert_id;
       Cart66Common::log("Saved email log ($emailLogId): " . $data['status'] . "\nSQL: " . $wpdb->last_query . ' ' . Cart66Common::localTs());
     }
   }
-  
+
   public static function resendEmailFromLog($id) {
     $resendEmail = false;
     global $wpdb;
@@ -71,5 +72,5 @@ class Cart66EmailLog extends Cart66ModelAbstract {
     }
     return $resendEmail;
   }
-  
+
 }

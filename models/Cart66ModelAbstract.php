@@ -1,10 +1,10 @@
 <?php
 abstract class Cart66ModelAbstract extends Cart66BaseModelAbstract {
-  
+
   protected $_tableName;
   protected $_db;
 
-  
+
   public function __construct($id=null) {
     global $wpdb;
     $this->_db = $wpdb;
@@ -15,11 +15,11 @@ abstract class Cart66ModelAbstract extends Cart66BaseModelAbstract {
     }
     $this->_errors = array();
   }
-  
+
   public function getDb() {
     return $this->_db;
   }
-  
+
   public function load($id) {
     if(is_numeric($id) && $id > 0) {
       $sql = 'SELECT * from ' . $this->_tableName . " WHERE id='$id'";
@@ -30,10 +30,10 @@ abstract class Cart66ModelAbstract extends Cart66BaseModelAbstract {
     }
     return false;
   }
-  
+
   /**
    * Reset all the values to those that are stored in the database
-   * 
+   *
    * @return void
    */
   public function refresh() {
@@ -42,14 +42,14 @@ abstract class Cart66ModelAbstract extends Cart66BaseModelAbstract {
       $this->load($id);
     }
   }
-  
+
   public function deleteMe() {
     if($this->id > 0) {
       $sql = "DELETE from " . $this->_tableName . " WHERE id='" . $this->id . "'";
       $this->_db->query($sql);
     }
   }
-  
+
   /**
    * Return an array of models
    */
@@ -80,7 +80,7 @@ abstract class Cart66ModelAbstract extends Cart66BaseModelAbstract {
     }
     return $models;
   }
-  
+
   public function getModelsNoClass($where=null, $orderBy=null, $limit=null, $tableName=null, $id=null) {
     $models = array();
     global $wpdb;
@@ -107,7 +107,7 @@ abstract class Cart66ModelAbstract extends Cart66BaseModelAbstract {
     }
     return $models;
   }
-  
+
   /**
    * Return the first matching model or false if no model could be found.
    */
@@ -120,21 +120,24 @@ abstract class Cart66ModelAbstract extends Cart66BaseModelAbstract {
     }
     return $model;
   }
-  
+
   public function save() {
     foreach($this->_data as $key => $value) {
       if(is_scalar($value)) {
         $this->_data[$key] = stripslashes($value);
       }
+      if(is_null($value)){
+        $this->_data[$key] = '';
+      }
     }
     Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] " . get_class($this) . " Saving Data: " . print_r($this->_data, true));
     return $this->_data['id'] >= 1 ? $this->_update() : $this->_insert();
   }
-  
+
   public function getLastQuery() {
     return $this->_db->last_query;
   }
-  
+
   protected function _insert() {
     if(isset($this->_data['created_at'])) {
       $this->_data['created_at'] = date('Y-m-d H:i:s', Cart66Common::localTs());
@@ -146,7 +149,7 @@ abstract class Cart66ModelAbstract extends Cart66BaseModelAbstract {
     $this->id = $this->_db->insert_id;
     return $this->id;
   }
-  
+
   protected function _update() {
     if(isset($this->_data['updated_at'])) {
       $this->_data['updated_at'] = date('Y-m-d H:i:s',  Cart66Common::localTs());
@@ -154,7 +157,7 @@ abstract class Cart66ModelAbstract extends Cart66BaseModelAbstract {
     $this->_db->update($this->_tableName, $this->_data, array('id' => $this->_data['id']));
     return $this->id;
   }
-  
+
 
   protected function _initProperties() {
   	$query = 'describe ' . $this->_tableName;
@@ -169,10 +172,10 @@ abstract class Cart66ModelAbstract extends Cart66BaseModelAbstract {
   	  }
   	}
   }
-  
+
   public function __wakeup(){
     global $wpdb;
     $this->_db = $wpdb;
   }
-  
+
 }

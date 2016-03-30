@@ -121,7 +121,7 @@ create table if not exists `[prefix]orders` (
   `email` varchar(100) not null,
   `coupon` varchar(50) null,
   `discount_amount` decimal(12,2) not null,
-  `trans_id` varchar(25) not null,
+  `trans_id` varchar(255) not null,
   `authorization` varchar(50) not null,
   `shipping` decimal(12,2) not null,
   `subtotal` decimal(12,2) not null,
@@ -382,3 +382,8 @@ alter table `[prefix]orders` add column `additional_fields` longtext default '' 
 
 -- Upgrading to Cart66 1.5.6
 alter table `[prefix]orders` modify `trans_id` varchar(255) not null;
+
+-- Upgrading to Cart66 1.5.8
+alter table `[prefix]shipping_methods` modify `name` varchar(255) not null;
+alter table `[prefix]shipping_methods` modify `carrier` varchar(255) not null;
+alter table `[prefix]shipping_methods` modify `code` varchar(255) not null;

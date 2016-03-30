@@ -34,6 +34,7 @@ elseif($_SERVER['REQUEST_METHOD'] == "POST") {
 <div id="cart66-inner-tabs">
   <ul class="subsubsub">
     <li><a href="#main-main_settings" class="main-main_settings"><?php _e('Main Settings', 'cart66'); ?></a> | </li>
+    <li><a href="#main-styles" class="main-styles"><?php _e('Styles', 'cart66'); ?></a> | </li>
     <li><a href="#main-status_options" class="main-status_options"><?php _e('Status Options', 'cart66'); ?></a> | </li>
     <li><a href="#main-store_home_page" class="main-store_home_page"><?php _e('Store Home Page', 'cart66'); ?></a> | </li>
     <li><a href="#main-admin_roles" class="main-admin_roles"><?php _e('Admin Roles', 'cart66'); ?></a><?php if(CART66_PRO): ?> | <?php endif; ?></li>
@@ -48,6 +49,37 @@ elseif($_SERVER['REQUEST_METHOD'] == "POST") {
   <form action="" method="post" id="mainSettingsForm" class="ajaxSettingForm">
     <input type="hidden" name="action" value="save_settings" />
     <input type="hidden" name="_success" value="<?php _e('Your main settings have been saved', 'cart66'); ?>." />
+    <div id="main-styles" class="pane">
+        <h3><?php _e( 'Cart66 Styles' , 'cart66' ); ?></h3>
+        <table class="form-table cart66-settings-table">
+          <tbody>
+            <tr valign="top">
+              <th scope="row"><?php _e('Enhanced Cart Styles', 'cart66'); ?></th>
+              <td>                
+                  <input type="hidden" name="enhanced_cart_css" value="">
+                <label>
+                  <input type="checkbox" name="enhanced_cart_css" value="1" <?php echo (Cart66Setting::getValue('enhanced_cart_css')) ? 'checked="checked" ' : ''; ?>> <?php _e('Use enhanced checkout styles.', 'cart66'); ?>
+                </label>
+                <p class="description"><?php _e( 'Utilize the enhanced cart and checkout stylesheet.' , 'cart66' ); ?></p>
+              </td>
+            </tr>
+            <tr valign="top">
+              <th scope="row"><?php _e('Add to Cart/Primary Button Color', 'cart66'); ?></th>
+              <td>
+                <input type="text" name="add_to_cart_color" id="add_to_cart_color" class="medium-text" value="<?php echo Cart66Setting::getValue('add_to_cart_color'); ?>" /> 
+                <p class="description"><?php _e( 'Set the color of the add to cart and primary buttons.' , 'cart66' ); ?></p>
+              </td>
+            </tr>
+            <tr valign="top">
+              <th scope="row"><?php _e('Checkout/Secondary Button Color', 'cart66'); ?></th>
+              <td>
+                <input type="text" name="checkout_button_color" id="checkout_button_color" class="medium-text" value="<?php echo Cart66Setting::getValue('checkout_button_color'); ?>" /> 
+                <p class="description"><?php _e( 'Set the color of the checkout and secondary buttons.' , 'cart66' ); ?></p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
     <div id="main-main_settings" class="pane">
       <h3><?php _e('Main Settings', 'cart66'); ?></h3>
       <table class="form-table">
@@ -488,6 +520,9 @@ elseif($_SERVER['REQUEST_METHOD'] == "POST") {
       if($('#international_sales_no').is(':checked')) {
         $('.eligible_countries_block').hide();
       }
+      
+      $("#add_to_cart_color, #checkout_button_color").wpColorPicker({defaultColor: "#858585"});
+        
       
     });
   })(jQuery);

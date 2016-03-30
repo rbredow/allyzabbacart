@@ -1456,6 +1456,7 @@ class Cart66Cart {
     }
     foreach($valid_options as $key => $option_group) {
       foreach($option_group as $option) {
+        $choice = htmlspecialchars_decode($choice);
         $choice = preg_replace('[\W]', '', $choice);
         $option = preg_replace('[\W]', '', $option);
         
