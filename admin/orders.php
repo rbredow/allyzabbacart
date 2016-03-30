@@ -4,7 +4,7 @@
   $status = '';
   $stats = trim(Cart66Setting::getValue('status_options'));
   if(Cart66Common::getVal('status')) {
-    $status = (strlen($stats) >= 1 && strpos($stats, Cart66Common::getVal('status')) > -1) ? Cart66Common::getVal('status') : '';    
+    $status = (strlen($stats) >= 1 && strpos(strtolower($stats), strtolower(Cart66Common::getVal('status'))) > -1) ? Cart66Common::getVal('status') : '';    
   }
 ?>
 <h2><?php _e('Cart66 Orders', 'cart66'); ?></h2>

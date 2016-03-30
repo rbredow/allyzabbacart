@@ -1,13 +1,13 @@
 <?php
 class Cart66PayPalStandard {
-  
+
   protected $_log;
-  
+
   public function __construct() {
     $paypalUrl = Cart66Common::getPayPalUrl();
     Cart66Common::log("Constructing PayPal Gateway for IPN using URL: $paypalUrl");
   }
-  
+
   public function storePendingOrder() {
     $orderInfo = array();
     $orderInfo['bill_address'] = '';
@@ -21,10 +21,10 @@ class Cart66PayPalStandard {
     $orderId = Cart66Session::get('Cart66Cart')->storeOrder($orderInfo);
     return $orderId;
   }
-  
+
   /**
    * Save a PayPal IPN order from a Website Payments Pro cart sale.
-   * 
+   *
    * @param array $pp Urldecoded array of IPN key value pairs
    */
   public function saveOrder($pp) {
@@ -37,7 +37,7 @@ class Cart66PayPalStandard {
     }
     $order = new Cart66Order();
     $order->loadByOuid($ouid);
-    
+
     if($order->id > 0 && $order->status == 'checkout_pending') {
       $hasDigital = false;
 
@@ -58,7 +58,7 @@ class Cart66PayPalStandard {
 
       $statusOptions = Cart66Common::getOrderStatusOptions();
       $status = $statusOptions[0];
-      
+
       // Parse Gravity Forms ids
       $gfIds = array();
       if(!empty($gfData)) {
@@ -74,7 +74,7 @@ class Cart66PayPalStandard {
       if(isset($pp['discount'])) {
         $discount = $pp['discount'];
       }
-      
+
       $data = array(
         'bill_first_name' => $pp['first_name'],
         'bill_last_name' => $pp['last_name'],
@@ -101,6 +101,9 @@ class Cart66PayPalStandard {
         'status' => $status
       );
 
+      foreach($data as $key => $value){
+        $data[$key] = (is_null($value)) ? '' : $value;
+      }
 
       // Verify the first items in the IPN are for products managed by Cart66. It could be an IPN from some other type of transaction.
       $productsTable = Cart66Common::getTableName('products');
@@ -121,11 +124,11 @@ class Cart66PayPalStandard {
           }
         }
       }
-      
+
       $order->setData($data);
       $order->save();
       $orderId = $order->id;
-      
+
       // Handle email receipts
       if(CART66_PRO && CART66_EMAILS && Cart66Setting::getValue('enable_advanced_notifications') ==1) {
         $notify = new Cart66AdvancedNotifications($orderId);
@@ -153,7 +156,7 @@ class Cart66PayPalStandard {
         }
         // End iDevAffiliate Tracking
       }
-      
+
     }
     else {
 
@@ -244,6 +247,7 @@ class Cart66PayPalStandard {
           'ouid' => $ouid
         );
 
+        $data = Cart66Common::deNullArrayValues($data);
 
         // Verify the first items in the IPN are for products managed by Cart66. It could be an IPN from some other type of transaction.
         $productsTable = Cart66Common::getTableName('products');
@@ -352,7 +356,7 @@ class Cart66PayPalStandard {
 
       } // end transaction id check
     }
-    
+
   }
-  
+
 }

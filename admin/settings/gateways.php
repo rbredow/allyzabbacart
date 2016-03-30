@@ -277,7 +277,7 @@ $tab = 'gateway-gateway_settings';
     </div>
     <div id="gateway-other_gateways" class="pane">
       <?php if(CART66_PRO): ?>
-        <a href="#" target="_blank" class="authorize_logo"><img src="https://cart66.com/images/integrations/authorize-net-logo.png" align="left" alt="Authorize.net"></a>
+        <a href="http://reseller.authorize.net/application/?resellerId=15642" target="_blank" class="authorize_logo"><img src="https://cart66.com/images/integrations/authorize-net-logo.png" align="left" alt="Authorize.net"></a>
         <a href="#" target="_blank" class="quantum_logo"><img src="https://cart66.com/images/integrations/quantum_logo.png" align="left" alt="Quantum Gateway"></a>
         <a href="#" target="_blank" class="eway_row"><img src="https://cart66.com/images/integrations/eWAY-logo.png" align="left" alt="eWay Payment Gateway (AU)"></a>
         <a href="#" target="_blank" class="mwarrior_row"><img src="https://cart66.com/images/integrations/merchant_warrior_logo.png" align="left" alt="Merchant Warrior Payment Gateway"></a>

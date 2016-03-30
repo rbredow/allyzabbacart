@@ -263,7 +263,7 @@ p.left img {
 	background-repeat: no-repeat;	
 }
 #wp-admin-bar-cart66.hover .cart66AdminBarIcon{
-	background-image: url(../images/cart66_tiny_type.png);
+	/*background-image: url(../images/cart66_tiny_type.png);*/
 }
 
 #cart66_page_errors {

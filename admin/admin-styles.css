@@ -1094,3 +1094,7 @@ display:none;
  display:block !important;
  margin-right:10px;
 }
+
+.color-sample{
+ padding:0 .75em;
+}

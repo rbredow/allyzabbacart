@@ -1,26 +1,26 @@
-<?php 
+<?php
 require_once(CART66_PATH . "/models/Pest.php");
 require_once(CART66_PATH . "/models/PestJSON.php");
 
 class Cart66Mijireh extends Cart66GatewayAbstract {
-  
+
   var $response = array();
-  
+
   public function __construct() {
     parent::__construct();
     if(!Cart66Setting::getValue('mijireh_access_key')) {
       throw new Cart66Exception('Invalid Mijireh Configuration', 66512);
     }
   }
-  
+
   public function getCreditCardTypes() {
     return array();
   }
-  
+
   public function initCheckout($amount) {
     $cart = Cart66Session::get('Cart66Cart');
     $tax = $this->getTaxAmount();
-    
+
     $order = array(
       'return_url' => Cart66Common::appendWurlQueryString('task=mijireh_notification'),
       'tax' => $tax,
@@ -30,7 +30,7 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
       'total' => number_format($cart->getGrandTotal() + $tax, 2, '.', ''),
       'items' => array()
     );
-    
+
     // Prepare the shipping address if it is available
     if(strlen($this->_shipping['address']) > 3) {
       $order['shipping_address'] = array(
@@ -45,20 +45,20 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
         'phone'          => $this->_payment['phone']
       );
     }
-    
+
     // Add shipping method and promotion code as meta_data
     $order['meta_data'] = array(
       'shipping_method' => Cart66Session::get('Cart66Cart')->getShippingMethodName(),
       'coupon' => Cart66Common::getPromoMessage(),
       'custom-field' => $this->_payment['custom-field'],
     );
-    
+
     // Add logged in users id to the meta_data for membership product upgrades/extensions
     $account_id = Cart66Common::isLoggedIn();
     if($account_id) {
       $order['meta_data']['account_id'] = $account_id;
     }
-    
+
     // Add coupon code as meta_data
     foreach($cart->getItems() as $key => $item) {
       $sku = $item->getItemNumber();
@@ -68,22 +68,22 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
         'price' => $item->getProductPrice(),
         'quantity' => $item->getQuantity()
       );
-      
+
       if($custom_desc = $item->getCustomFieldDesc()) {
         $order_item_data['name'] .= "\n" . $custom_desc;
       }
-      
+
       if($custom_info = $item->getCustomFieldInfo()) {
         $order_item_data['name'] .= "\n" . $custom_info;
       }
-      
+
       $order['items'][$key] = $order_item_data;
-      
+
       $option_info = trim($item->getOptionInfo());
       if(!empty($option_info)) {
         $order['meta_data']['options_' . $sku] = $option_info;
       }
-      
+
       if($item->hasAttachedForms()) {
         $form_ids = $item->getFormEntryIds();
         if(is_array($form_ids) && count($form_ids)) {
@@ -92,7 +92,7 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
         }
       }
     }
-    
+
     // DBG
     /*
     echo "<pre>";
@@ -100,7 +100,7 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
     echo "</pre>";
     die();
     */
-    
+
     try {
       //Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Sending Order To Mijireh" . print_r($order, true));
       $access_key = Cart66Setting::getValue('mijireh_access_key');
@@ -125,24 +125,24 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
     catch(Exception $e) {
       Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] REST Request Failed: " . $e->getMessage());
     }
-    
+
   }
-  
+
   public function doSale() {
     return false;
   }
-  
+
   public function getTransactionResponseDescription() {
      $description['errormessage'] = $this->response['error_message'];
      $description['errorcode'] = $this->response['error_code'];
      return $description;
    }
-  
+
   public function setPayment($p) {
     $this->_payment['phone'] = isset($p['phone']) ? $p['phone'] : '';
     $this->_payment['email'] = isset($p['email']) ? $p['email'] : '';
     $this->_payment['custom-field'] = isset($p['custom-field']) ? $p['custom-field'] : '';
-    
+
     // For subscription accounts
     if(isset($p['password'])) {
       if($p['password'] != $p['password2']) {
@@ -151,22 +151,23 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
       }
     }
   }
-  
+
   public function saveMijirehOrder($order_number) {
     global $wpdb;
-    
+
     // Make sure the order is not already in the database
     $orders_table = Cart66Common::getTableName('orders');
     $sql = "select id from $orders_table where trans_id = %s";
     $sql = $wpdb->prepare($sql, $order_number);
     $order_id = $wpdb->get_var($sql);
-    
+
     if(!$order_id) {
       // Save the order
       $order = new Cart66Order();
       $cloud_order = $this->pullOrder($order_number);
       $order_data = $this->buildOrderDataArray($cloud_order);
       Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Order data: " . print_r($order_data, true));
+      $order_data = Cart66Common::deNullArrayValues($order_data);
       $order_id = $order->rawSave($order_data);
 
       // Save the order items
@@ -183,7 +184,7 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
           'quantity' => $item['quantity'],
           'duid' => md5($order_id . $item['sku'])
         );
-        
+
         // Look for gravity forms data
         if(isset($cloud_order['meta_data'][$key]['gforms_' . $item['sku']])){
           $data['form_entry_ids'] = $cloud_order['meta_data'][$key]['gforms_' . $item['sku']];
@@ -202,11 +203,12 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
             }
           }
         }
-        
+
+        $data = Cart66Common::deNullArrayValues($data);
         Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Trying to save this order item:" . print_r($data, true));
         $wpdb->insert($order_items_table, $data);
         $order_item_id = $wpdb->insert_id;
-        
+
         // Decrement inventory after sale
         if(Cart66Setting::getValue('track_inventory') == 1) {
           $option_info = '';
@@ -215,7 +217,7 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
           }
           Cart66Product::decrementInventory($data['product_id'], $option_info, $data['quantity']);
         }
-        
+
         // Look for membership product upgrades/extensions
         if(isset($cloud_order['meta_data']['account_id']) && is_numeric($cloud_order['meta_data']['account_id'])) {
           $order->load($order_id);
@@ -228,14 +230,14 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
             $order->save();
           }
         }
-        
+
       }
-      
+
       //update the number of redemptions for the promotion code.
       if(Cart66Session::get('Cart66Promotion')) {
         Cart66Session::get('Cart66Promotion')->updateRedemptions();
       }
-      
+
       // Send email receipts
       if(CART66_PRO && CART66_EMAILS && Cart66Setting::getValue('enable_advanced_notifications') == 1) {
         $notify = new Cart66AdvancedNotifications($order_id);
@@ -247,14 +249,14 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
       }
       //Cart66Common::sendEmailReceipts($order_id);
     }
-    
+
     // Redirect to receipt page
     $this->goToReceipt($order_id);
   }
-  
+
   /**
    * Redirect buyer to receipt page for the given order id
-   * 
+   *
    * @param int The id in the orders table
    */
   public function goToReceipt($order_id) {
@@ -262,31 +264,31 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
     $receipt = Cart66Common::getPageLink('store/receipt');
     $vars = strpos($receipt, '?') ? '&' : '?';
     $vars .= "ouid=" . $order->ouid;
-    
+
     // Look for newsletter options
     if(Cart66Setting::getValue('constantcontact_list_ids') || Cart66Setting::getValue('mailchimp_list_ids')) {
       $vars .= '&newsletter=1';
     }
-    
+
     $receipt .= $vars;
     Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Redirecting to: $receipt");
     wp_redirect($receipt);
     exit;
   }
-  
+
   /**
    * Return an array of data matching the rows in the Cart66 orders table for the given order.
-   * 
+   *
    * @param array The order as retrieved from mijireh
    * @return array
    */
   public function buildOrderDataArray($cloud_order) {
     $statusOptions = Cart66Common::getOrderStatusOptions();
     $status = $statusOptions[0];
-    
+
     $order_token = $cloud_order['order_number'] . $cloud_order['email'];
     $ouid = md5($order_token);
-    
+
     $order_info = array(
       'trans_id' => $cloud_order['order_number'],
       'authorization' => $cloud_order['authorization'],
@@ -305,7 +307,7 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
       'coupon' => $cloud_order['meta_data']['coupon'],
       'custom_field' => $cloud_order['meta_data']['custom-field'],
     );
-    
+
     if(isset($cloud_order['shipping_address']) && is_array($cloud_order['shipping_address'])) {
       $address = $cloud_order['shipping_address'];
       $order_info['ship_first_name'] = $address['first_name'];
@@ -318,10 +320,10 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
       $order_info['ship_country'] = Cart66Common::getCountryName($address['country']);
       $order_info['phone'] = $address['phone'];
     }
-    
+
     return $order_info;
   }
-  
+
   public function pullOrder($order_number) {
     $access_key = Cart66Setting::getValue('mijireh_access_key');
     $rest = new PestJSON(MIJIREH_CHECKOUT);
@@ -330,5 +332,5 @@ class Cart66Mijireh extends Cart66GatewayAbstract {
     Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] GETTING MIJIREH ORDER: " . print_r($order_data, true));
     return $order_data;
   }
-  
+
 }

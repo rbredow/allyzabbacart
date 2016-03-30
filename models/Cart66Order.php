@@ -1,19 +1,19 @@
 <?php
 class Cart66Order extends Cart66ModelAbstract {
-  
+
   protected $_orderInfo = array();
   protected $_items = array();
-  
+
   public function __construct($id=null) {
     $this->_tableName = Cart66Common::getTableName('orders');
     parent::__construct($id);
   }
-  
+
   /**
    * Attempt to load an order from the database with the given ouid.
-   * 
+   *
    * Return true on success and false on failure
-   * 
+   *
    * @return boolean
    */
   public function loadByOuid($ouid) {
@@ -25,40 +25,49 @@ class Cart66Order extends Cart66ModelAbstract {
     }
     return $is_loaded;
   }
-  
+
   public function loadByDuid($duid) {
     $tableName = Cart66Common::getTableName('order_items');
     $sql = $this->_db->prepare("SELECT order_id from $tableName where duid=%s", $duid);
     $id = $this->_db->get_var($sql);
     $this->load($id);
   }
-  
+
   public function setInfo(array $info) {
     $this->_orderInfo = $info;
   }
-  
+
   public function setItems(array $items) {
     $this->_items = $items;
   }
-  
+
   /**
    * Save the order and return the order id
-   * 
+   *
    * If the order is new, then save all the order items and manage the inventory.
    * If the order already exists, only the order data is updated. The order items and inventory
    * remain unchanged.
-   * 
+   *
    * @return int The order id (primary key form database)
    */
   public function save() {
     // If the order is already in the database, only save the order data, not the ordered items or anything else
     if($this->id > 0) {
+      //prevent null values from being inserted
+      foreach($this->_data as $key => $value){
+        $this->_data[$key] = (is_null($value)) ? '' : $value;
+      }
       $this->_db->update($this->_tableName, $this->_data, array('id' => $this->id));
     }
     else {
       // This is a new order so save the order items and deduct from inventory if necessary
       $this->_orderInfo['ouid'] = md5($this->_orderInfo['trans_id'] . $this->_orderInfo['bill_address']);
-      
+
+      //prevent null values from being inserted
+      foreach($this->_orderInfo as $key => $value){
+        $this->_orderInfo[$key] = (is_null($value)) ? '' : $value;
+      }
+
       $this->_db->insert($this->_tableName, $this->_orderInfo);
       $this->id = $this->_db->insert_id;
       if($this->id == 0 || empty($this->id)) {
@@ -66,7 +75,7 @@ class Cart66Order extends Cart66ModelAbstract {
         return false;
       }
       $key = $this->_orderInfo['trans_id'] . '-' . $this->id . '-';
-      
+
       foreach($this->_items as $item) {
 
         // Deduct from inventory
@@ -106,24 +115,24 @@ class Cart66Order extends Cart66ModelAbstract {
         $orderItemId = $this->_db->insert_id;
         Cart66Common::log("Saved order item ($orderItemId): " . $data['description'] . "\nSQL: " . $this->_db->last_query);
       }
-      
+
     }
-    
+
     return $this->id;
   }
-  
+
   /**
    * Insert an assoc array into the orders table and return the primary key for the new row.
-   * 
+   *
    * The given array has keys that match the database table column names.
-   * 
+   *
    * @return int
    */
   public function rawSave(array $data) {
     $this->_db->insert($this->_tableName, $data);
     return $this->_db->insert_id;
   }
-  
+
   public function getOrderRows($where=null, $orderBy=null, $limit=null, $columns=false) {
     if(isset($where)) {
       $where = ' ' . $where;
@@ -134,27 +143,27 @@ class Cart66Order extends Cart66ModelAbstract {
     if(isset($limit)) {
       $limit = ' limit ' . $limit;
     }
-    
+
     if(!$columns) {
       $columns = '*';
     }
-    
+
     $sql = "SELECT $columns from $this->_tableName $where $orderBy $limit";
-    
+
     $orders = $this->_db->get_results($sql);
     return $orders;
   }
-  
+
   public function getItems() {
     $orderItems = Cart66Common::getTableName('order_items');
     $sql = "SELECT * from $orderItems where order_id = $this->id order by product_price desc";
     $items = $this->_db->get_results($sql);
     return $items;
   }
-  
+
   /**
    * Return the membership product from the order or false if none exists.
-   * 
+   *
    * @return Cart66Product
    */
   public function getMembershipProduct() {
@@ -168,7 +177,7 @@ class Cart66Order extends Cart66ModelAbstract {
     }
     return null;
   }
-  
+
   public function updateStatus($status) {
     if($this->id > 0) {
       $data['status'] = $status;
@@ -177,7 +186,7 @@ class Cart66Order extends Cart66ModelAbstract {
     }
     return false;
   }
-  
+
   public function updateNotes($notes) {
     if($this->id > 0) {
       $data['notes'] = $notes;
@@ -186,7 +195,7 @@ class Cart66Order extends Cart66ModelAbstract {
     }
     return false;
   }
-  
+
   public function updateTracking($trackingNumber) {
     if($this->id > 0) {
       $data['tracking_number'] = $trackingNumber;
@@ -195,7 +204,7 @@ class Cart66Order extends Cart66ModelAbstract {
     }
     return false;
   }
-  
+
   public function updateViewed() {
     global $post;
     $receiptPage = get_page_by_path('store/receipt');
@@ -211,7 +220,7 @@ class Cart66Order extends Cart66ModelAbstract {
     }
     return false;
   }
-  
+
   public function addTrackingCode() {
     if(Cart66Setting::getValue('enable_google_analytics') && (is_home() || is_front_page())) {
       echo '<script type="text/javascript">
@@ -230,7 +239,7 @@ class Cart66Order extends Cart66ModelAbstract {
     }
     return false;
   }
-  
+
   public function deleteMe($resetInventory=false, $resetRedemptions=false) {
     if($this->id > 0) {
       // Delete attached Gravity Forms if they exist
@@ -242,28 +251,28 @@ class Cart66Order extends Cart66ModelAbstract {
             foreach($entryIds as $entryId) {
               RGFormsModel::delete_lead($entryId);
             }
-          } 
+          }
         }
       }
-      
+
       if($resetInventory && Cart66Setting::getValue('track_inventory')) {
         $this->resetInventoryForItems();
       }
       if($resetRedemptions && $this->coupon != 'none') {
         $this->resetRedemptionsForCoupon();
       }
-      
+
       // Delete order items
       $orderItems = Cart66Common::getTableName('order_items');
       $sql = "DELETE from $orderItems where order_id = $this->id";
       $this->_db->query($sql);
-      
+
       // Delete the order
       $sql = "DELETE from $this->_tableName where id = $this->id";
       $this->_db->query($sql);
     }
   }
-  
+
   public function resetRedemptionsForCoupon() {
     Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] about to reset the number of redemptions");
     $coupon = explode(' (', $this->coupon);
@@ -271,7 +280,7 @@ class Cart66Order extends Cart66ModelAbstract {
     $promotion->loadByCode($coupon[0]);
     $promotion->resetRedemptions();
   }
-  
+
   public function resetInventoryForItems() {
     $orderItems = $this->getItems();
     foreach($orderItems as $item) {
@@ -290,26 +299,26 @@ class Cart66Order extends Cart66ModelAbstract {
       Cart66Product::increaseInventory($item->product_id, $variation, $qty);
     }
   }
-  
+
   public function hasShippingInfo() {
     return strlen(trim($this->ship_first_name) . trim($this->ship_last_name) . trim($this->ship_address)) > 0;
   }
-  
+
   /**
    * Check to see if the order includes a product that requires an account and if there is an account in the system
-   * 
+   *
    * Return values:
    *   1 = The account exists
    *   0 = There is no account associated with the order and there is no need for one
    *  -1 = There is no account associated with the order but there should be
-   * 
+   *
    * @return int
    */
   public function hasAccount() {
     if($this->id == 0 || empty($this->id)) {
       throw new Cart66Exception(66400, 'Cannot get account status on an order with no order id');
     }
-    
+
     Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Account ID on order: " . $this->account_id);
     if($this->account_id > 0) {
       return 1; // The order has an account associated with it
@@ -327,7 +336,7 @@ class Cart66Order extends Cart66ModelAbstract {
     }
     return 0; // No account exists and none is needed.
   }
-  
+
   public function getOrderIdByAccountId($accountId){
     $is_loaded = false;
     $sql = $this->_db->prepare("SELECT id from $this->_tableName where account_id=%s", $accountId);
@@ -337,13 +346,13 @@ class Cart66Order extends Cart66ModelAbstract {
     }
     return $is_loaded;
   }
-  
+
   public function dailyPrunePendingPayPalOrders() {
     Cart66Setting::setValue('daily_prune_pending_orders_last_checked', Cart66Common::localTs());
     $o = new Cart66Order();
     $dayStart = date('Y-m-d 00:00:00', strtotime('48 hours ago', Cart66Common::localTs()));
     $dayEnd = date('Y-m-d 00:00:00', strtotime('24 hours ago', Cart66Common::localTs()));
-    
+
     $orders = $o->getOrderRows("WHERE status in ('paypal_pending','checkout_pending') AND ordered_on >= '$dayStart' AND ordered_on < '$dayEnd'");
     foreach($orders as $order) {
       Cart66Common::log('[' . basename(__FILE__) . ' - line ' . __LINE__ . "] yes, i am to delete an order or more: " . $order->id);
@@ -351,12 +360,12 @@ class Cart66Order extends Cart66ModelAbstract {
       $o->deleteMe(true, true);
     }
   }
-  
+
   public function getAffiliateTotal(){
     // return portion of order total eligible for affiliate comission
     $affiliate_total = $this->total - ($this->shipping + $this->tax);
     $affiliate_total = Cart66Common::currencyFormat($affiliate_total, 2, '.', '');
     return $affiliate_total;
   }
-  
+
 }

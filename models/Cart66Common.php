@@ -554,7 +554,7 @@ class Cart66Common {
       'CX'=>'Christmas Island',
       'CC'=>'Cocos Islands',
       'CO'=>'Colombia',
-      'KM'=>'Comoros',      
+      'KM'=>'Comoros',
       'CG'=>'Congo',
       'CK'=>'Cook Islands',
       'CR'=>'Costa Rica',
@@ -1761,6 +1761,32 @@ class Cart66Common {
       }
     }
     return $symbol;
+  }
+
+  public function Cart66StyleOverride(){
+    if(Cart66Setting::getValue('add_to_cart_color')){
+      ?>
+<!-- Cart66 Style Override -->
+<style type="text/css" media="screen">
+.Cart66ButtonPrimary, #content .Cart66ButtonPrimary, .Cart66CartButton .purAddToCart{
+  background-color: <?php echo Cart66Setting::getValue('add_to_cart_color'); ?>;
+}
+.Cart66ButtonSecondary, #content .Cart66ButtonSecondary{
+  background-color: <?php echo Cart66Setting::getValue('checkout_button_color'); ?>;
+}
+</style>
+<?php
+    }
+  }
+
+  public static function deNullArrayValues($array=array()){
+    $output = $array;
+    if(is_array($output)){
+      foreach($array as $key=>$value){
+        $output[$key] = (is_null($value)) ? '' : $value;
+      }
+    }
+    return $output;
   }
 
 }

@@ -434,9 +434,14 @@ class Cart66 {
     return $items;
   }
 
-  public static function enqueueScripts() {
-    $url = CART66_URL . '/cart66.css';
-    wp_enqueue_style('cart66-css', $url, null, CART66_VERSION_NUMBER, 'all');
+  public static function enqueueScripts() {    
+    if(Cart66Setting::getValue('enhanced_cart_css')) {
+      $cart_css_url = CART66_URL . '/cart66_enhanced.css';
+    }
+    else{
+      $cart_css_url = CART66_URL . '/cart66.css';
+    }
+    wp_enqueue_style('cart66-css', $cart_css_url, null, CART66_VERSION_NUMBER, 'all');
 
     if($css = Cart66Setting::getValue('styles_url')) {
       wp_enqueue_style('cart66-custom-css', $css, null, CART66_VERSION_NUMBER, 'all');
@@ -445,6 +450,9 @@ class Cart66 {
     // Include the cart66 javascript library
     $path = CART66_URL . '/js/cart66-library.js';
     wp_enqueue_script('cart66-library', $path, array('jquery'), CART66_VERSION_NUMBER, true);
+    if(Cart66Setting::getValue('enhanced_cart_css')) {
+     wp_enqueue_script('selectBox', CART66_URL . '/js/jquery.selectBox.js', array('jquery'), CART66_VERSION_NUMBER, true);
+    }
   }
 
   public function loadCoreModels() {
@@ -593,6 +601,8 @@ class Cart66 {
       // dequeue new datatables on cart66 pages
       wp_dequeue_script( 'datatables_js' );
       wp_enqueue_script('jquery-datatables', $path, null, CART66_VERSION_NUMBER, true);
+      wp_enqueue_style( 'wp-color-picker' );
+      wp_enqueue_script( 'wp-color-picker' );
     }
     $path = CART66_URL . '/js/page-slurp.js';
     wp_enqueue_script('page-slurp', $path, null, CART66_VERSION_NUMBER, true);
@@ -693,7 +703,7 @@ class Cart66 {
    * Put Cart66 in the admin menu
    */
   public function buildAdminMenu() {
-    $icon = CART66_URL . '/images/cart66_logo_16.gif';
+    $icon = 'dashicons-cart';
 
     add_menu_page('Cart66', 'Cart66', Cart66Common::getPageRoles('orders'), 'cart66_admin', null, $icon);
     add_submenu_page('cart66_admin', __('Orders', 'cart66'), __('Orders', 'cart66'), Cart66Common::getPageRoles('orders'), 'cart66_admin', array('Cart66Admin', 'ordersPage'));
