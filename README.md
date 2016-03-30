@@ -10,4 +10,4 @@ For example:
   4. Integration with Sendy as another option for mailing lists.
   5. A number of bug fixes and a number of default preference changes.
 
-As of 12/29/15, this version tracks to the current release of Cart66 Pro. Integrations have been without conflict for a couple of years.
+As of 03/29/16, this version tracks to the current 1.5.8 release of Cart66 Pro. Integrations have been without conflict for a couple of years.
